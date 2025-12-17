@@ -71,7 +71,9 @@
       "title": "New Analysis Request",
       "titleLabel": "Request Title",
       "titlePlaceholder": "Enter request title",
+      "titleRequired": "Please enter a title",
       "filesLabel": "Upload Files",
+      "filesRequired": "Please upload files",
       "submit": "Create Request",
       "submitting": "Creating...",
       "successMessage": "Analysis request created",
@@ -112,6 +114,12 @@
   "admin": {
     "title": "Admin Dashboard",
     "allRequests": "All Requests Management",
+    "allRequestsDescription": "View and manage all user requests",
+    "pendingRequests": "Pending Requests",
+    "noPendingRequests": "No pending requests",
+    "quickMenu": "Quick Menu",
+    "userManagement": "User Management",
+    "userManagementDescription": "Add users, change roles",
     "stats": {
       "totalUsers": "Total Users",
       "totalRequests": "Total Requests",
@@ -141,7 +149,10 @@
     "roleChangeSuccess": "Role changed successfully",
     "deleteSuccess": "User deleted successfully",
     "deleteConfirm": "Are you sure you want to delete this user?",
-    "cannotDeleteSelf": "You cannot delete yourself"
+    "cannotDeleteSelf": "You cannot delete yourself",
+    "list": "User List",
+    "noUsers": "No users",
+    "createButton": "Create User"
   },
   "language": {
     "select": "Select Language",

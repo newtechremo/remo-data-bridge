@@ -2,10 +2,13 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import Link from "next/link";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export default async function DashboardPage() {
   const session = await auth();
   const isAdmin = session?.user?.role === "admin";
+  const t = await getTranslations();
+  const locale = await getLocale();
 
   const where = isAdmin ? {} : { userId: session?.user?.id };
 
@@ -26,14 +29,14 @@ export default async function DashboardPage() {
     ]);
 
   const stats = [
-    { label: "전체 요청", value: totalRequests, color: "bg-blue-500" },
-    { label: "대기중", value: pendingRequests, color: "bg-yellow-500" },
-    { label: "완료", value: completedRequests, color: "bg-green-500" },
+    { label: t("dashboard.totalRequests"), value: totalRequests, color: "bg-blue-500" },
+    { label: t("dashboard.pendingRequests"), value: pendingRequests, color: "bg-yellow-500" },
+    { label: t("dashboard.completedRequests"), value: completedRequests, color: "bg-green-500" },
   ];
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">대시보드</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t("dashboard.title")}</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat) => (
@@ -55,14 +58,14 @@ export default async function DashboardPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>최근 요청</CardTitle>
+          <CardTitle>{t("dashboard.recentRequests")}</CardTitle>
         </CardHeader>
         <CardContent>
           {recentRequests.length === 0 ? (
             <p className="text-gray-500 text-center py-8">
-              아직 요청이 없습니다.{" "}
+              {t("requests.noRequests")}{" "}
               <Link href="/requests/new" className="text-blue-600 hover:underline">
-                새 요청 만들기
+                {t("nav.newRequest")}
               </Link>
             </p>
           ) : (
@@ -80,8 +83,8 @@ export default async function DashboardPage() {
                       </p>
                       <p className="text-sm text-gray-500">
                         {isAdmin && request.user?.name && `${request.user.name} · `}
-                        파일 {request._count.files}개 ·{" "}
-                        {new Date(request.createdAt).toLocaleDateString("ko-KR")}
+                        {t("requests.files")} {request._count.files} ·{" "}
+                        {new Date(request.createdAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US")}
                       </p>
                     </div>
                     <span
@@ -93,11 +96,7 @@ export default async function DashboardPage() {
                           : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
-                      {request.status === "completed"
-                        ? "완료"
-                        : request.status === "in_progress"
-                        ? "진행중"
-                        : "대기중"}
+                      {t(`status.${request.status}`)}
                     </span>
                   </div>
                 </Link>

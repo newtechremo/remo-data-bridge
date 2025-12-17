@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -11,6 +12,7 @@ import type { FileUploadInfo } from "@/types";
 
 export default function NewRequestPage() {
   const router = useRouter();
+  const t = useTranslations();
   const [title, setTitle] = useState("");
   const [files, setFiles] = useState<FileUploadInfo[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,12 +25,12 @@ export default function NewRequestPage() {
     e.preventDefault();
 
     if (!title.trim()) {
-      toast.error("제목을 입력해주세요");
+      toast.error(t("requests.new.titleRequired"));
       return;
     }
 
     if (files.length === 0) {
-      toast.error("파일을 업로드해주세요");
+      toast.error(t("requests.new.filesRequired"));
       return;
     }
 
@@ -43,15 +45,15 @@ export default function NewRequestPage() {
 
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.error || "요청 생성에 실패했습니다");
+        throw new Error(error.error || t("requests.new.errorMessage"));
       }
 
       const request = await res.json();
-      toast.success("분석 요청이 생성되었습니다");
+      toast.success(t("requests.new.successMessage"));
       router.push(`/requests/${request.id}`);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "요청 생성에 실패했습니다"
+        error instanceof Error ? error.message : t("requests.new.errorMessage")
       );
     } finally {
       setIsSubmitting(false);
@@ -64,18 +66,18 @@ export default function NewRequestPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">새 분석 요청</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t("requests.new.title")}</h1>
 
       <form onSubmit={handleSubmit}>
         <Card>
           <CardHeader>
-            <CardTitle>요청 정보</CardTitle>
+            <CardTitle>{t("requests.detail.info")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <Input
               id="title"
-              label="요청 제목"
-              placeholder="분석 요청 제목을 입력하세요"
+              label={t("requests.new.titleLabel")}
+              placeholder={t("requests.new.titlePlaceholder")}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -83,7 +85,7 @@ export default function NewRequestPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                파일 업로드
+                {t("requests.new.filesLabel")}
               </label>
               <FileUploader onFilesUploaded={handleFilesUploaded} />
             </div>
@@ -91,7 +93,7 @@ export default function NewRequestPage() {
             {files.length > 0 && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  업로드된 파일 ({files.length}개)
+                  {t("files.uploadedFile")} ({files.length})
                 </label>
                 <div className="space-y-2">
                   {files.map((file, index) => (
@@ -113,7 +115,7 @@ export default function NewRequestPage() {
                         size="sm"
                         onClick={() => removeFile(index)}
                       >
-                        삭제
+                        {t("common.delete")}
                       </Button>
                     </div>
                   ))}
@@ -127,14 +129,14 @@ export default function NewRequestPage() {
                 variant="secondary"
                 onClick={() => router.back()}
               >
-                취소
+                {t("common.cancel")}
               </Button>
               <Button
                 type="submit"
                 isLoading={isSubmitting}
                 disabled={!title.trim() || files.length === 0}
               >
-                요청 생성
+                {t("requests.new.submit")}
               </Button>
             </div>
           </CardContent>

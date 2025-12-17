@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import ResultFileUploader from "@/components/files/ResultFileUploader";
 import {
-  formatDate,
   formatFileSize,
-  getStatusLabel,
   getStatusColor,
 } from "@/lib/utils";
 import type { AnalysisRequest } from "@/types";
@@ -19,6 +18,8 @@ export default function RequestDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { data: session } = useSession();
+  const t = useTranslations();
+  const locale = useLocale();
   const [request, setRequest] = useState<AnalysisRequest | null>(null);
   const [loading, setLoading] = useState(true);
   const [resultText, setResultText] = useState("");
@@ -28,6 +29,10 @@ export default function RequestDetailPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isAdmin = session?.user?.role === "admin";
+
+  const formatDate = (date: Date | string) => {
+    return new Date(date).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US");
+  };
 
   useEffect(() => {
     fetchRequest();
@@ -48,7 +53,7 @@ export default function RequestDetailPage() {
       window.open(downloadUrl, "_blank");
     } catch (error) {
       console.error(error);
-      toast.error("다운로드 URL을 가져오는데 실패했습니다");
+      toast.error(t("files.downloadError"));
     }
   };
 
@@ -63,7 +68,7 @@ export default function RequestDetailPage() {
       window.open(downloadUrl, "_blank");
     } catch (error) {
       console.error(error);
-      toast.error("다운로드 URL을 가져오는데 실패했습니다");
+      toast.error(t("files.downloadError"));
     }
   };
 
@@ -86,7 +91,7 @@ export default function RequestDetailPage() {
       setFileResultFileUrls(initialFileResultFileUrls);
     } catch (error) {
       console.error(error);
-      toast.error("요청을 불러오는데 실패했습니다");
+      toast.error(t("common.error"));
     } finally {
       setLoading(false);
     }
@@ -103,11 +108,11 @@ export default function RequestDetailPage() {
 
       if (!res.ok) throw new Error("Failed to save result");
 
-      toast.success("분석 결과가 저장되었습니다");
+      toast.success(t("requests.result.savedMessage"));
       fetchRequest();
     } catch (error) {
       console.error(error);
-      toast.error("분석 결과 저장에 실패했습니다");
+      toast.error(t("requests.result.saveError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -126,15 +131,15 @@ export default function RequestDetailPage() {
 
       if (!res.ok) throw new Error("Failed to save file result");
 
-      toast.success("파일 분석 결과가 저장되었습니다");
+      toast.success(t("requests.result.fileSavedMessage"));
     } catch (error) {
       console.error(error);
-      toast.error("파일 분석 결과 저장에 실패했습니다");
+      toast.error(t("requests.result.saveError"));
     }
   };
 
   const handleDelete = async () => {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
+    if (!confirm(t("requests.detail.confirmDelete"))) return;
 
     try {
       const res = await fetch(`/api/requests/${params.id}`, {
@@ -143,11 +148,11 @@ export default function RequestDetailPage() {
 
       if (!res.ok) throw new Error("Failed to delete request");
 
-      toast.success("요청이 삭제되었습니다");
+      toast.success(t("common.success"));
       router.push("/requests");
     } catch (error) {
       console.error(error);
-      toast.error("삭제에 실패했습니다");
+      toast.error(t("common.error"));
     }
   };
 
@@ -162,7 +167,7 @@ export default function RequestDetailPage() {
   if (!request) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">요청을 찾을 수 없습니다</p>
+        <p className="text-gray-500">{t("common.noData")}</p>
       </div>
     );
   }
@@ -173,41 +178,41 @@ export default function RequestDetailPage() {
         <h1 className="text-2xl font-bold text-gray-900">{request.title}</h1>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => router.back()}>
-            목록으로
+            {t("requests.detail.backToList")}
           </Button>
           <Button variant="danger" onClick={handleDelete}>
-            삭제
+            {t("common.delete")}
           </Button>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>요청 정보</CardTitle>
+          <CardTitle>{t("requests.detail.info")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-500">상태</p>
+              <p className="text-sm text-gray-500">{t("requests.status")}</p>
               <span
                 className={`inline-block mt-1 px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(
                   request.status
                 )}`}
               >
-                {getStatusLabel(request.status)}
+                {t(`status.${request.status}`)}
               </span>
             </div>
             <div>
-              <p className="text-sm text-gray-500">요청자</p>
+              <p className="text-sm text-gray-500">{t("requests.requester")}</p>
               <p className="mt-1 font-medium">{request.user?.name || "-"}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">요청일</p>
+              <p className="text-sm text-gray-500">{t("requests.requestDate")}</p>
               <p className="mt-1">{formatDate(request.createdAt)}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">파일 수</p>
-              <p className="mt-1">{request.files?.length || 0}개</p>
+              <p className="text-sm text-gray-500">{t("requests.files")}</p>
+              <p className="mt-1">{request.files?.length || 0}</p>
             </div>
           </div>
         </CardContent>
@@ -215,11 +220,11 @@ export default function RequestDetailPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>업로드된 파일</CardTitle>
+          <CardTitle>{t("requests.detail.uploadedFiles")}</CardTitle>
         </CardHeader>
         <CardContent>
           {request.files?.length === 0 ? (
-            <p className="text-gray-500">업로드된 파일이 없습니다</p>
+            <p className="text-gray-500">{t("requests.detail.noFiles")}</p>
           ) : (
             <div className="space-y-4">
               {request.files?.map((file) => (
@@ -241,16 +246,14 @@ export default function RequestDetailPage() {
                       variant="secondary"
                       size="sm"
                       onClick={() => handleFileDownload(file.id)}
-                    >
-                      다운로드
-                    </Button>
+                    >{t("common.download")}</Button>
                   </div>
 
                   {isAdmin && (
                     <div className="mt-4 space-y-3">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          파일 분석 결과 (텍스트)
+                          {t("requests.result.fileResultText")}
                         </label>
                         <textarea
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -262,11 +265,11 @@ export default function RequestDetailPage() {
                               [file.id]: e.target.value,
                             }))
                           }
-                          placeholder="이 파일에 대한 분석 결과를 입력하세요"
+                          placeholder={t("requests.result.fileResultPlaceholder")}
                         />
                       </div>
                       <ResultFileUploader
-                        label="파일 분석 결과 (파일)"
+                        label={t("requests.result.fileResultFile")}
                         currentUrl={fileResultFileUrls[file.id]}
                         onFileUploaded={(url) =>
                           setFileResultFileUrls((prev) => ({
@@ -278,17 +281,13 @@ export default function RequestDetailPage() {
                       <Button
                         size="sm"
                         onClick={() => handleSaveFileResult(file.id)}
-                      >
-                        저장
-                      </Button>
+                      >{t("common.save")}</Button>
                     </div>
                   )}
 
                   {!isAdmin && (file.analysisResult || file.analysisResultFileUrl) && (
                     <div className="mt-4 p-3 bg-gray-50 rounded-lg space-y-2">
-                      <p className="text-sm font-medium text-gray-700">
-                        파일 분석 결과
-                      </p>
+                      <p className="text-sm font-medium text-gray-700">{t("requests.detail.analysisResult")}</p>
                       {file.analysisResult && (
                         <p className="text-sm text-gray-600 whitespace-pre-wrap">
                           {file.analysisResult}
@@ -296,13 +295,11 @@ export default function RequestDetailPage() {
                       )}
                       {file.analysisResultFileUrl && (
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-500">결과 파일:</span>
+                          <span className="text-sm text-gray-500">{t("requests.result.resultFile")}:</span>
                           <button
                             onClick={() => handleDownload(file.analysisResultFileUrl!)}
                             className="text-sm text-blue-600 hover:underline"
-                          >
-                            다운로드/보기
-                          </button>
+                          >{t("files.downloadView")}</button>
                         </div>
                       )}
                     </div>
@@ -316,25 +313,25 @@ export default function RequestDetailPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>분석 결과</CardTitle>
+          <CardTitle>{t("requests.detail.analysisResult")}</CardTitle>
         </CardHeader>
         <CardContent>
           {isAdmin ? (
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  분석 결과 텍스트
+                  {t("requests.result.textLabel")}
                 </label>
                 <textarea
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   rows={6}
                   value={resultText}
                   onChange={(e) => setResultText(e.target.value)}
-                  placeholder="분석 결과를 입력하세요"
+                  placeholder={t("requests.result.textPlaceholder")}
                 />
               </div>
               <ResultFileUploader
-                label="분석 결과 파일 (선택사항)"
+                label={t("requests.result.fileLabel")}
                 currentUrl={resultFileUrl}
                 onFileUploaded={(url) => setResultFileUrl(url)}
               />
@@ -342,37 +339,33 @@ export default function RequestDetailPage() {
                 onClick={handleSaveResult}
                 isLoading={isSubmitting}
                 disabled={!resultText.trim()}
-              >
-                결과 저장 및 완료 처리
-              </Button>
+              >{t("requests.result.saveButton")}</Button>
             </div>
           ) : request.resultText ? (
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-gray-500 mb-2">분석 결과</p>
+                <p className="text-sm text-gray-500 mb-2">{t("requests.detail.analysisResult")}</p>
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <p className="whitespace-pre-wrap">{request.resultText}</p>
                 </div>
               </div>
               {request.resultFileUrl && (
                 <div>
-                  <p className="text-sm text-gray-500 mb-2">결과 파일</p>
+                  <p className="text-sm text-gray-500 mb-2">{t("requests.result.resultFile")}</p>
                   <button
                     onClick={() => handleDownload(request.resultFileUrl!)}
                     className="text-blue-600 hover:underline"
-                  >
-                    다운로드
-                  </button>
+                  >{t("common.download")}</button>
                 </div>
               )}
               {request.resultCreatedAt && (
                 <p className="text-sm text-gray-500">
-                  결과 입력일: {formatDate(request.resultCreatedAt)}
+                  {t("requests.detail.resultDate")}: {formatDate(request.resultCreatedAt)}
                 </p>
               )}
             </div>
           ) : (
-            <p className="text-gray-500">아직 분석 결과가 없습니다</p>
+            <p className="text-gray-500">{t("requests.detail.noResult")}</p>
           )}
         </CardContent>
       </Card>

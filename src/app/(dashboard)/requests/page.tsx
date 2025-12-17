@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations, useLocale } from "next-intl";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
-import { formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
+import { getStatusColor } from "@/lib/utils";
 import type { AnalysisRequest } from "@/types";
 
 interface RequestsResponse {
@@ -18,6 +19,8 @@ interface RequestsResponse {
 }
 
 export default function RequestsPage() {
+  const t = useTranslations();
+  const locale = useLocale();
   const [data, setData] = useState<RequestsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -44,25 +47,29 @@ export default function RequestsPage() {
   };
 
   const statuses = [
-    { value: "", label: "전체" },
-    { value: "pending", label: "대기중" },
-    { value: "in_progress", label: "진행중" },
-    { value: "completed", label: "완료" },
+    { value: "", labelKey: "dashboard.totalRequests" },
+    { value: "pending", labelKey: "status.pending" },
+    { value: "in_progress", labelKey: "status.in_progress" },
+    { value: "completed", labelKey: "status.completed" },
   ];
+
+  const formatDate = (date: Date | string) => {
+    return new Date(date).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US");
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">분석 요청 목록</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("requests.title")}</h1>
         <Link href="/requests/new">
-          <Button>새 요청</Button>
+          <Button>{t("requests.newRequest")}</Button>
         </Link>
       </div>
 
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>요청 목록</CardTitle>
+            <CardTitle>{t("nav.requests")}</CardTitle>
             <div className="flex gap-2">
               {statuses.map((status) => (
                 <button
@@ -77,7 +84,7 @@ export default function RequestsPage() {
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
-                  {status.label}
+                  {t(status.labelKey)}
                 </button>
               ))}
             </div>
@@ -85,10 +92,10 @@ export default function RequestsPage() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="text-center py-8 text-gray-500">로딩중...</div>
+            <div className="text-center py-8 text-gray-500">{t("common.loading")}</div>
           ) : !data?.requests.length ? (
             <div className="text-center py-8 text-gray-500">
-              요청이 없습니다.
+              {t("requests.noRequests")}
             </div>
           ) : (
             <>
@@ -97,19 +104,19 @@ export default function RequestsPage() {
                   <thead>
                     <tr className="border-b">
                       <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        제목
+                        {t("requests.requestTitle")}
                       </th>
                       <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        요청자
+                        {t("requests.requester")}
                       </th>
                       <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        파일
+                        {t("requests.files")}
                       </th>
                       <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        상태
+                        {t("requests.status")}
                       </th>
                       <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        요청일
+                        {t("requests.requestDate")}
                       </th>
                     </tr>
                   </thead>
@@ -131,7 +138,7 @@ export default function RequestsPage() {
                           {request.user?.name || "-"}
                         </td>
                         <td className="py-3 px-4 text-gray-600">
-                          {request.files?.length || 0}개
+                          {request.files?.length || 0}
                         </td>
                         <td className="py-3 px-4">
                           <span
@@ -139,7 +146,7 @@ export default function RequestsPage() {
                               request.status
                             )}`}
                           >
-                            {getStatusLabel(request.status)}
+                            {t(`status.${request.status}`)}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-gray-600">
@@ -159,7 +166,7 @@ export default function RequestsPage() {
                     disabled={page === 1}
                     onClick={() => setPage(page - 1)}
                   >
-                    이전
+                    {t("common.back")}
                   </Button>
                   <span className="text-sm text-gray-600">
                     {page} / {data.pagination.totalPages}
@@ -170,7 +177,7 @@ export default function RequestsPage() {
                     disabled={page === data.pagination.totalPages}
                     onClick={() => setPage(page + 1)}
                   >
-                    다음
+                    {t("dashboard.viewAll")}
                   </Button>
                 </div>
               )}

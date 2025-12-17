@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import Link from "next/link";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -10,6 +11,9 @@ export default async function AdminPage() {
   if (session?.user?.role !== "admin") {
     redirect("/dashboard");
   }
+
+  const t = await getTranslations();
+  const locale = await getLocale();
 
   const [totalUsers, totalRequests, pendingRequests, completedRequests] =
     await Promise.all([
@@ -30,15 +34,15 @@ export default async function AdminPage() {
   });
 
   const stats = [
-    { label: "전체 사용자", value: totalUsers, color: "bg-purple-500" },
-    { label: "전체 요청", value: totalRequests, color: "bg-blue-500" },
-    { label: "대기중 요청", value: pendingRequests, color: "bg-yellow-500" },
-    { label: "완료된 요청", value: completedRequests, color: "bg-green-500" },
+    { label: t("admin.stats.totalUsers"), value: totalUsers, color: "bg-purple-500" },
+    { label: t("admin.stats.totalRequests"), value: totalRequests, color: "bg-blue-500" },
+    { label: t("admin.stats.pendingRequests"), value: pendingRequests, color: "bg-yellow-500" },
+    { label: t("admin.stats.completedRequests"), value: completedRequests, color: "bg-green-500" },
   ];
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">관리자 대시보드</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t("admin.title")}</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
@@ -62,19 +66,19 @@ export default async function AdminPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>처리 대기중인 요청</CardTitle>
+              <CardTitle>{t("admin.pendingRequests")}</CardTitle>
               <Link
                 href="/requests"
                 className="text-sm text-blue-600 hover:underline"
               >
-                전체 보기
+                {t("dashboard.viewAll")}
               </Link>
             </div>
           </CardHeader>
           <CardContent>
             {recentRequests.length === 0 ? (
               <p className="text-gray-500 text-center py-4">
-                대기중인 요청이 없습니다
+                {t("admin.noPendingRequests")}
               </p>
             ) : (
               <div className="space-y-3">
@@ -86,8 +90,8 @@ export default async function AdminPage() {
                   >
                     <p className="font-medium text-gray-900">{request.title}</p>
                     <p className="text-sm text-gray-500">
-                      {request.user?.name} · 파일 {request._count.files}개 ·{" "}
-                      {new Date(request.createdAt).toLocaleDateString("ko-KR")}
+                      {request.user?.name} · {t("requests.files")} {request._count.files} ·{" "}
+                      {new Date(request.createdAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US")}
                     </p>
                   </Link>
                 ))}
@@ -99,7 +103,7 @@ export default async function AdminPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>빠른 메뉴</CardTitle>
+              <CardTitle>{t("admin.quickMenu")}</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -111,9 +115,9 @@ export default async function AdminPage() {
                 <div className="flex items-center">
                   <span className="text-2xl mr-3">👥</span>
                   <div>
-                    <p className="font-medium text-gray-900">사용자 관리</p>
+                    <p className="font-medium text-gray-900">{t("admin.userManagement")}</p>
                     <p className="text-sm text-gray-500">
-                      사용자 추가, 역할 변경
+                      {t("admin.userManagementDescription")}
                     </p>
                   </div>
                 </div>
@@ -125,9 +129,9 @@ export default async function AdminPage() {
                 <div className="flex items-center">
                   <span className="text-2xl mr-3">📋</span>
                   <div>
-                    <p className="font-medium text-gray-900">전체 요청 관리</p>
+                    <p className="font-medium text-gray-900">{t("admin.allRequests")}</p>
                     <p className="text-sm text-gray-500">
-                      모든 사용자의 요청 조회 및 관리
+                      {t("admin.allRequestsDescription")}
                     </p>
                   </div>
                 </div>

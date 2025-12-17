@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useState, useRef } from "react";
 import Button from "@/components/ui/Button";
 import { formatFileSize } from "@/lib/utils";
@@ -13,8 +15,9 @@ interface ResultFileUploaderProps {
 export default function ResultFileUploader({
   onFileUploaded,
   currentUrl,
-  label = "결과 파일",
+  label,
 }: ResultFileUploaderProps) {
+  const t = useTranslations();
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState(currentUrl || "");
   const [fileName, setFileName] = useState("");
@@ -64,7 +67,7 @@ export default function ResultFileUploader({
       onFileUploaded(url);
     } catch (error) {
       console.error("Upload error:", error);
-      alert("파일 업로드에 실패했습니다");
+      alert(t("files.uploadError"));
     } finally {
       setUploading(false);
     }
@@ -95,7 +98,7 @@ export default function ResultFileUploader({
       window.open(downloadUrl, "_blank");
     } catch (error) {
       console.error(error);
-      alert("다운로드 URL을 가져오는데 실패했습니다");
+      alert(t("files.downloadError"));
     }
   };
 
@@ -110,7 +113,7 @@ export default function ResultFileUploader({
               onClick={handleView}
               className="text-sm text-blue-600 hover:underline truncate block text-left"
             >
-              {fileName || "업로드된 파일"}
+              {fileName || t("files.uploadedFile")}
             </button>
           </div>
           <div className="flex gap-2">
@@ -142,7 +145,7 @@ export default function ResultFileUploader({
             isLoading={uploading}
             disabled={uploading}
           >
-            {uploading ? "업로드 중..." : "파일 선택"}
+            {uploading ? t("files.uploading") : t("files.selectFile")}
           </Button>
           {uploading && (
             <span className="text-sm text-gray-500">{fileName}</span>

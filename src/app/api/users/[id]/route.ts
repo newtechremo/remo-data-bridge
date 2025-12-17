@@ -6,6 +6,7 @@ import { z } from "zod";
 const updateUserSchema = z.object({
   name: z.string().min(1).optional(),
   role: z.enum(["admin", "user"]).optional(),
+  memo: z.string().optional(),
 });
 
 // PATCH: Update user (admin only)

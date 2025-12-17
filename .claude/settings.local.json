@@ -30,7 +30,10 @@
       "Bash(npx prisma generate:*)",
       "Bash(if exist \"node_modules\\.prisma\" rmdir /s /q \"node_modules\\.prisma\")",
       "Bash(cat:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(node:*)",
+      "Bash(cmd //c \"taskkill /PID 263876 /F\")",
+      "Bash(cmd //c \"taskkill /IM node.exe /F\")"
     ]
   }
 }

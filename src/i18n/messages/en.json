@@ -152,7 +152,11 @@
     "cannotDeleteSelf": "You cannot delete yourself",
     "list": "User List",
     "noUsers": "No users",
-    "createButton": "Create User"
+    "createButton": "Create User",
+    "memo": "Memo",
+    "memoPlaceholder": "Enter memo about this user",
+    "editUserTitle": "Edit User",
+    "updateSuccess": "User information updated successfully"
   },
   "language": {
     "select": "Select Language",

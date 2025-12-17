@@ -152,7 +152,11 @@
     "cannotDeleteSelf": "자기 자신은 삭제할 수 없습니다",
     "list": "사용자 목록",
     "noUsers": "사용자가 없습니다",
-    "createButton": "사용자 생성"
+    "createButton": "사용자 생성",
+    "memo": "메모",
+    "memoPlaceholder": "사용자에 대한 메모를 입력하세요",
+    "editUserTitle": "사용자 수정",
+    "updateSuccess": "사용자 정보가 수정되었습니다"
   },
   "language": {
     "select": "언어 선택",

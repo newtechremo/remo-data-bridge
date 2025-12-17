@@ -60,6 +60,7 @@ export async function PATCH(
         email: true,
         name: true,
         role: true,
+        memo: true,
         createdAt: true,
       },
     });

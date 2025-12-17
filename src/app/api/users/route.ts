@@ -30,6 +30,7 @@ export async function GET() {
         email: true,
         name: true,
         role: true,
+        memo: true,
         createdAt: true,
         _count: {
           select: { analysisRequests: true },

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { cn, formatFileSize } from "@/lib/utils";
@@ -23,6 +25,7 @@ export default function FileUploader({
   onFilesUploaded,
   maxFiles = 10,
 }: FileUploaderProps) {
+  const t = useTranslations();
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
 
   const uploadFile = async (file: File): Promise<FileUploadInfo> => {
@@ -144,10 +147,10 @@ export default function FileUploader({
         <div className="text-gray-500">
           <p className="text-lg mb-2">
             {isDragActive
-              ? "파일을 여기에 놓으세요"
-              : "파일을 드래그하거나 클릭하여 업로드"}
+              ? t("files.dropzoneActive")
+              : t("files.dropzone")}
           </p>
-          <p className="text-sm">최대 {maxFiles}개 파일</p>
+          <p className="text-sm">{t("files.maxFiles", { count: maxFiles })}</p>
         </div>
       </div>
 
@@ -167,9 +170,9 @@ export default function FileUploader({
                 </p>
                 <p className="text-xs text-gray-500">
                   {formatFileSize(item.file.size)}
-                  {item.status === "uploading" && " · 업로드 중..."}
-                  {item.status === "done" && " · 완료"}
-                  {item.status === "error" && ` · 오류: ${item.error}`}
+                  {item.status === "uploading" && ` · ${t("files.uploading")}`}
+                  {item.status === "done" && ` · ${t("files.uploaded")}`}
+                  {item.status === "error" && ` · ${t("files.uploadError")}: ${item.error}`}
                 </p>
               </div>
               <div className="flex items-center gap-2">

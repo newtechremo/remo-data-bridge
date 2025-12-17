@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  role         String   @default("user") // "admin" or "user"
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  analysisRequests AnalysisRequest[]
+
+  @@map("users")
+}
+
+model AnalysisRequest {
+  id              String    @id @default(cuid())
+  userId          String    @map("user_id")
+  title           String
+  status          String    @default("pending") // "pending", "in_progress", "completed", "cancelled"
+  resultText      String?   @map("result_text")
+  resultFileUrl   String?   @map("result_file_url")
+  resultCreatedAt DateTime? @map("result_created_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  files UploadedFile[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("analysis_requests")
+}
+
+model UploadedFile {
+  id                    String   @id @default(cuid())
+  requestId             String   @map("request_id")
+  originalFilename      String   @map("original_filename")
+  s3Key                 String   @map("s3_key")
+  s3Url                 String   @map("s3_url")
+  fileSize              Int      @map("file_size")
+  mimeType              String?  @map("mime_type")
+  analysisResult        String?  @map("analysis_result")
+  analysisResultFileUrl String?  @map("analysis_result_file_url")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  request AnalysisRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@index([requestId])
+  @@map("uploaded_files")
+}

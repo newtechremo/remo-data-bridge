@@ -4,6 +4,12 @@ node_modules/
 # Build
 dist/
 build/
+.next/
+out/
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
 
 # Environment
 .env
@@ -27,3 +33,11 @@ npm-debug.log*
 # Temp
 temp_*.txt
 *.tmp
+test_file.txt
+nul
+
+# Test cookies
+cookies*.txt
+
+# Admin scripts (contains sensitive info)
+update-admin.ts

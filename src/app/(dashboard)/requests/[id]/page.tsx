@@ -132,6 +132,7 @@ export default function RequestDetailPage() {
       if (!res.ok) throw new Error("Failed to save file result");
 
       toast.success(t("requests.result.fileSavedMessage"));
+      fetchRequest();
     } catch (error) {
       console.error(error);
       toast.error(t("requests.result.saveError"));
@@ -278,6 +279,15 @@ export default function RequestDetailPage() {
                           }))
                         }
                       />
+                      {fileResultFileUrls[file.id] && (
+                        <div className="flex items-center gap-2 p-2 bg-green-50 rounded">
+                          <span className="text-sm text-green-700">{t("requests.result.resultFile")}:</span>
+                          <button
+                            onClick={() => handleDownload(fileResultFileUrls[file.id])}
+                            className="text-sm text-blue-600 hover:underline"
+                          >{t("files.downloadView")}</button>
+                        </div>
+                      )}
                       <Button
                         size="sm"
                         onClick={() => handleSaveFileResult(file.id)}

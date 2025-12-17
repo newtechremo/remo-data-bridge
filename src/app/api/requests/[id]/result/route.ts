@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const resultSchema = z.object({
   resultText: z.string().optional(),
-  resultFileUrl: z.string().url().optional(),
+  resultFileUrl: z.string().optional().transform(val => val === "" ? undefined : val).pipe(z.string().url().optional()),
 });
 
 // PATCH: Add/Update analysis result

@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import LanguageSelector from "@/components/ui/LanguageSelector";
 
 export default function LoginPage() {
   const router = useRouter();
+  const t = useTranslations();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,13 +30,13 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        setError("이메일 또는 비밀번호가 올바르지 않습니다.");
+        setError(t("auth.loginError"));
       } else {
         router.push("/dashboard");
         router.refresh();
       }
     } catch {
-      setError("로그인 중 오류가 발생했습니다.");
+      setError(t("common.error"));
     } finally {
       setIsLoading(false);
     }
@@ -41,17 +44,20 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="absolute top-4 right-4">
+        <LanguageSelector />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">분석 요청 관리 시스템</CardTitle>
-          <p className="text-gray-500 mt-1">로그인하여 시작하세요</p>
+          <CardTitle className="text-2xl">{t("common.appName")}</CardTitle>
+          <p className="text-gray-500 mt-1">{t("auth.loginSubtitle")}</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               id="email"
               type="email"
-              label="이메일"
+              label={t("auth.email")}
               placeholder="email@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -61,8 +67,8 @@ export default function LoginPage() {
             <Input
               id="password"
               type="password"
-              label="비밀번호"
-              placeholder="비밀번호를 입력하세요"
+              label={t("auth.password")}
+              placeholder={t("auth.password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -79,7 +85,7 @@ export default function LoginPage() {
               size="lg"
               isLoading={isLoading}
             >
-              로그인
+              {isLoading ? t("auth.loggingIn") : t("auth.loginButton")}
             </Button>
           </form>
         </CardContent>

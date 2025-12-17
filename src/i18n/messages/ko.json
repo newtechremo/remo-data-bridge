@@ -1,0 +1,151 @@
+{
+  "common": {
+    "appName": "분석 요청 시스템",
+    "loading": "로딩 중...",
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "수정",
+    "confirm": "확인",
+    "back": "뒤로",
+    "search": "검색",
+    "noData": "데이터가 없습니다",
+    "error": "오류가 발생했습니다",
+    "success": "성공",
+    "download": "다운로드",
+    "upload": "업로드",
+    "view": "보기",
+    "close": "닫기"
+  },
+  "auth": {
+    "login": "로그인",
+    "logout": "로그아웃",
+    "email": "이메일",
+    "password": "비밀번호",
+    "loginTitle": "로그인",
+    "loginSubtitle": "분석 요청 시스템에 로그인하세요",
+    "loginButton": "로그인",
+    "loginError": "이메일 또는 비밀번호가 올바르지 않습니다",
+    "loggingIn": "로그인 중..."
+  },
+  "nav": {
+    "dashboard": "대시보드",
+    "requests": "분석 요청",
+    "newRequest": "새 요청",
+    "admin": "관리자",
+    "users": "사용자 관리"
+  },
+  "dashboard": {
+    "title": "대시보드",
+    "welcome": "환영합니다",
+    "totalRequests": "전체 요청",
+    "pendingRequests": "대기중",
+    "inProgressRequests": "진행중",
+    "completedRequests": "완료",
+    "recentRequests": "최근 요청",
+    "viewAll": "전체 보기"
+  },
+  "requests": {
+    "title": "분석 요청 목록",
+    "newRequest": "새 요청",
+    "requestTitle": "제목",
+    "status": "상태",
+    "requestDate": "요청일",
+    "requester": "요청자",
+    "files": "파일",
+    "noRequests": "분석 요청이 없습니다",
+    "createFirst": "첫 번째 분석 요청을 만들어보세요",
+    "detail": {
+      "title": "요청 상세",
+      "info": "요청 정보",
+      "uploadedFiles": "업로드된 파일",
+      "noFiles": "업로드된 파일이 없습니다",
+      "fileCount": "{count}개",
+      "analysisResult": "분석 결과",
+      "noResult": "아직 분석 결과가 없습니다",
+      "resultDate": "결과 입력일",
+      "backToList": "목록으로",
+      "confirmDelete": "정말 삭제하시겠습니까?"
+    },
+    "new": {
+      "title": "새 분석 요청",
+      "titleLabel": "요청 제목",
+      "titlePlaceholder": "분석 요청 제목을 입력하세요",
+      "filesLabel": "파일 업로드",
+      "submit": "요청 생성",
+      "submitting": "생성 중...",
+      "successMessage": "분석 요청이 생성되었습니다",
+      "errorMessage": "요청 생성에 실패했습니다"
+    },
+    "result": {
+      "textLabel": "분석 결과 텍스트",
+      "textPlaceholder": "분석 결과를 입력하세요",
+      "fileLabel": "분석 결과 파일 (선택사항)",
+      "saveButton": "결과 저장 및 완료 처리",
+      "fileResultText": "파일 분석 결과 (텍스트)",
+      "fileResultFile": "파일 분석 결과 (파일)",
+      "fileResultPlaceholder": "이 파일에 대한 분석 결과를 입력하세요",
+      "resultFile": "결과 파일",
+      "savedMessage": "분석 결과가 저장되었습니다",
+      "fileSavedMessage": "파일 분석 결과가 저장되었습니다",
+      "saveError": "분석 결과 저장에 실패했습니다"
+    }
+  },
+  "status": {
+    "pending": "대기중",
+    "in_progress": "진행중",
+    "completed": "완료",
+    "cancelled": "취소됨"
+  },
+  "files": {
+    "dropzone": "파일을 드래그하거나 클릭하여 업로드",
+    "dropzoneActive": "파일을 여기에 놓으세요",
+    "maxFiles": "최대 {count}개 파일",
+    "uploading": "업로드 중...",
+    "uploaded": "완료",
+    "uploadError": "업로드 실패",
+    "selectFile": "파일 선택",
+    "uploadedFile": "업로드된 파일",
+    "downloadView": "다운로드/보기",
+    "downloadError": "다운로드 URL을 가져오는데 실패했습니다"
+  },
+  "admin": {
+    "title": "관리자 대시보드",
+    "allRequests": "전체 요청 관리",
+    "stats": {
+      "totalUsers": "전체 사용자",
+      "totalRequests": "전체 요청",
+      "pendingRequests": "대기중 요청",
+      "completedRequests": "완료된 요청"
+    }
+  },
+  "users": {
+    "title": "사용자 관리",
+    "addUser": "사용자 추가",
+    "name": "이름",
+    "email": "이메일",
+    "role": "역할",
+    "createdAt": "가입일",
+    "requests": "요청 수",
+    "actions": "관리",
+    "roleAdmin": "관리자",
+    "roleUser": "일반 사용자",
+    "changeRole": "역할 변경",
+    "deleteUser": "사용자 삭제",
+    "addUserTitle": "새 사용자 추가",
+    "password": "비밀번호",
+    "addButton": "추가",
+    "adding": "추가 중...",
+    "addSuccess": "사용자가 추가되었습니다",
+    "addError": "사용자 추가에 실패했습니다",
+    "roleChangeSuccess": "역할이 변경되었습니다",
+    "deleteSuccess": "사용자가 삭제되었습니다",
+    "deleteConfirm": "정말 이 사용자를 삭제하시겠습니까?",
+    "cannotDeleteSelf": "자기 자신은 삭제할 수 없습니다"
+  },
+  "language": {
+    "select": "언어 선택",
+    "ko": "한국어",
+    "en": "English"
+  }
+}

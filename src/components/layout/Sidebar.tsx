@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -10,22 +11,23 @@ interface SidebarProps {
 
 export default function Sidebar({ isAdmin }: SidebarProps) {
   const pathname = usePathname();
+  const t = useTranslations();
 
   const navItems = [
-    { href: "/dashboard", label: "대시보드", icon: "📊" },
-    { href: "/requests", label: "분석 요청", icon: "📋" },
-    { href: "/requests/new", label: "새 요청", icon: "➕" },
+    { href: "/dashboard", labelKey: "nav.dashboard", icon: "📊" },
+    { href: "/requests", labelKey: "nav.requests", icon: "📋" },
+    { href: "/requests/new", labelKey: "nav.newRequest", icon: "➕" },
   ];
 
   const adminItems = [
-    { href: "/admin", label: "관리자", icon: "⚙️" },
-    { href: "/admin/users", label: "사용자 관리", icon: "👥" },
+    { href: "/admin", labelKey: "nav.admin", icon: "⚙️" },
+    { href: "/admin/users", labelKey: "nav.users", icon: "👥" },
   ];
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
       <div className="p-6">
-        <h1 className="text-xl font-bold text-gray-900">분석 요청 시스템</h1>
+        <h1 className="text-xl font-bold text-gray-900">{t("common.appName")}</h1>
       </div>
       <nav className="px-4 space-y-1">
         {navItems.map((item) => (
@@ -41,7 +43,7 @@ export default function Sidebar({ isAdmin }: SidebarProps) {
             )}
           >
             <span className="mr-3">{item.icon}</span>
-            {item.label}
+            {t(item.labelKey)}
           </Link>
         ))}
 
@@ -49,7 +51,7 @@ export default function Sidebar({ isAdmin }: SidebarProps) {
           <>
             <div className="pt-4 pb-2">
               <p className="px-4 text-xs font-semibold text-gray-400 uppercase">
-                관리자 메뉴
+                {t("nav.admin")}
               </p>
             </div>
             {adminItems.map((item) => (
@@ -65,7 +67,7 @@ export default function Sidebar({ isAdmin }: SidebarProps) {
                 )}
               >
                 <span className="mr-3">{item.icon}</span>
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             ))}
           </>

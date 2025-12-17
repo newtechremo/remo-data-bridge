@@ -1,0 +1,151 @@
+{
+  "common": {
+    "appName": "Analysis Request System",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "back": "Back",
+    "search": "Search",
+    "noData": "No data available",
+    "error": "An error occurred",
+    "success": "Success",
+    "download": "Download",
+    "upload": "Upload",
+    "view": "View",
+    "close": "Close"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "loginTitle": "Login",
+    "loginSubtitle": "Sign in to Analysis Request System",
+    "loginButton": "Sign In",
+    "loginError": "Invalid email or password",
+    "loggingIn": "Signing in..."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "requests": "Analysis Requests",
+    "newRequest": "New Request",
+    "admin": "Admin",
+    "users": "User Management"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome",
+    "totalRequests": "Total Requests",
+    "pendingRequests": "Pending",
+    "inProgressRequests": "In Progress",
+    "completedRequests": "Completed",
+    "recentRequests": "Recent Requests",
+    "viewAll": "View All"
+  },
+  "requests": {
+    "title": "Analysis Requests",
+    "newRequest": "New Request",
+    "requestTitle": "Title",
+    "status": "Status",
+    "requestDate": "Request Date",
+    "requester": "Requester",
+    "files": "Files",
+    "noRequests": "No analysis requests",
+    "createFirst": "Create your first analysis request",
+    "detail": {
+      "title": "Request Details",
+      "info": "Request Information",
+      "uploadedFiles": "Uploaded Files",
+      "noFiles": "No files uploaded",
+      "fileCount": "{count} files",
+      "analysisResult": "Analysis Result",
+      "noResult": "No analysis result yet",
+      "resultDate": "Result Date",
+      "backToList": "Back to List",
+      "confirmDelete": "Are you sure you want to delete?"
+    },
+    "new": {
+      "title": "New Analysis Request",
+      "titleLabel": "Request Title",
+      "titlePlaceholder": "Enter request title",
+      "filesLabel": "Upload Files",
+      "submit": "Create Request",
+      "submitting": "Creating...",
+      "successMessage": "Analysis request created",
+      "errorMessage": "Failed to create request"
+    },
+    "result": {
+      "textLabel": "Analysis Result Text",
+      "textPlaceholder": "Enter analysis result",
+      "fileLabel": "Analysis Result File (Optional)",
+      "saveButton": "Save Result & Mark Complete",
+      "fileResultText": "File Analysis Result (Text)",
+      "fileResultFile": "File Analysis Result (File)",
+      "fileResultPlaceholder": "Enter analysis result for this file",
+      "resultFile": "Result File",
+      "savedMessage": "Analysis result saved",
+      "fileSavedMessage": "File analysis result saved",
+      "saveError": "Failed to save analysis result"
+    }
+  },
+  "status": {
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "files": {
+    "dropzone": "Drag & drop files or click to upload",
+    "dropzoneActive": "Drop files here",
+    "maxFiles": "Maximum {count} files",
+    "uploading": "Uploading...",
+    "uploaded": "Uploaded",
+    "uploadError": "Upload failed",
+    "selectFile": "Select File",
+    "uploadedFile": "Uploaded file",
+    "downloadView": "Download/View",
+    "downloadError": "Failed to get download URL"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "allRequests": "All Requests Management",
+    "stats": {
+      "totalUsers": "Total Users",
+      "totalRequests": "Total Requests",
+      "pendingRequests": "Pending Requests",
+      "completedRequests": "Completed Requests"
+    }
+  },
+  "users": {
+    "title": "User Management",
+    "addUser": "Add User",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "createdAt": "Joined",
+    "requests": "Requests",
+    "actions": "Actions",
+    "roleAdmin": "Admin",
+    "roleUser": "User",
+    "changeRole": "Change Role",
+    "deleteUser": "Delete User",
+    "addUserTitle": "Add New User",
+    "password": "Password",
+    "addButton": "Add",
+    "adding": "Adding...",
+    "addSuccess": "User added successfully",
+    "addError": "Failed to add user",
+    "roleChangeSuccess": "Role changed successfully",
+    "deleteSuccess": "User deleted successfully",
+    "deleteConfirm": "Are you sure you want to delete this user?",
+    "cannotDeleteSelf": "You cannot delete yourself"
+  },
+  "language": {
+    "select": "Select Language",
+    "ko": "한국어",
+    "en": "English"
+  }
+}

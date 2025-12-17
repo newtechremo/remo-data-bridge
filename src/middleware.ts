@@ -7,7 +7,7 @@ export default auth((req) => {
   const isAdmin = req.auth?.user?.role === "admin";
 
   // Public routes
-  const publicRoutes = ["/login", "/api/auth"];
+  const publicRoutes = ["/login", "/api/auth", "/api/locale"];
   const isPublicRoute = publicRoutes.some((route) =>
     nextUrl.pathname.startsWith(route)
   );

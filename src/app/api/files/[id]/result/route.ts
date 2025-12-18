@@ -49,8 +49,8 @@ export async function PATCH(
     const updatedFile = await prisma.uploadedFile.update({
       where: { id },
       data: {
-        ...(analysisResult !== undefined && { analysisResult }),
-        ...(analysisResultFileUrl !== undefined && { analysisResultFileUrl }),
+        ...(analysisResult !== undefined && { analysisResult: analysisResult || null }),
+        ...(analysisResultFileUrl !== undefined && { analysisResultFileUrl: analysisResultFileUrl || null }),
       },
     });
 

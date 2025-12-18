@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Analysis Request System",
+    "appName": "REMO Data Bridge",
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
@@ -23,7 +23,7 @@
     "email": "Email",
     "password": "Password",
     "loginTitle": "Login",
-    "loginSubtitle": "Sign in to Analysis Request System",
+    "loginSubtitle": "Sign in to REMO Data Bridge",
     "loginButton": "Sign In",
     "loginError": "Invalid email or password",
     "loggingIn": "Signing in..."
@@ -161,6 +161,7 @@
   "language": {
     "select": "Select Language",
     "ko": "한국어",
-    "en": "English"
+    "en": "English",
+    "th": "ไทย"
   }
 }

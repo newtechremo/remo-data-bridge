@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "분석 요청 시스템",
+    "appName": "REMO Data Bridge",
     "loading": "로딩 중...",
     "save": "저장",
     "cancel": "취소",
@@ -23,7 +23,7 @@
     "email": "이메일",
     "password": "비밀번호",
     "loginTitle": "로그인",
-    "loginSubtitle": "분석 요청 시스템에 로그인하세요",
+    "loginSubtitle": "REMO Data Bridge에 로그인하세요",
     "loginButton": "로그인",
     "loginError": "이메일 또는 비밀번호가 올바르지 않습니다",
     "loggingIn": "로그인 중..."
@@ -161,6 +161,7 @@
   "language": {
     "select": "언어 선택",
     "ko": "한국어",
-    "en": "English"
+    "en": "English",
+    "th": "ไทย"
   }
 }

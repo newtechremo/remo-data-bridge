@@ -163,5 +163,12 @@
     "ko": "한국어",
     "en": "English",
     "th": "ไทย"
+  },
+  "consent": {
+    "title": "Cross-border Transfer Consent",
+    "body": "Your data will be transferred to overseas servers for analysis. By proceeding, you consent to the cross-border transfer and processing of your personal information in accordance with applicable data protection regulations.",
+    "checkbox": "I acknowledge and consent to the cross-border transfer of my data for analysis purposes as described above.",
+    "confirm": "I Agree & Proceed",
+    "cancel": "Cancel"
   }
 }

@@ -7,7 +7,7 @@ export function Card({ className, children, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "bg-white rounded-lg border border-gray-200 shadow-sm",
+        "bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden",
         className
       )}
       {...props}
@@ -20,7 +20,7 @@ export function Card({ className, children, ...props }: CardProps) {
 export function CardHeader({ className, children, ...props }: CardProps) {
   return (
     <div
-      className={cn("px-6 py-4 border-b border-gray-200", className)}
+      className={cn("bg-primary px-6 py-4", className)}
       {...props}
     >
       {children}
@@ -31,7 +31,10 @@ export function CardHeader({ className, children, ...props }: CardProps) {
 export function CardTitle({ className, children, ...props }: CardProps) {
   return (
     <h3
-      className={cn("text-lg font-semibold text-gray-900", className)}
+      className={cn(
+        "text-white font-black text-sm uppercase tracking-widest",
+        className
+      )}
       {...props}
     >
       {children}
@@ -41,7 +44,7 @@ export function CardTitle({ className, children, ...props }: CardProps) {
 
 export function CardContent({ className, children, ...props }: CardProps) {
   return (
-    <div className={cn("px-6 py-4", className)} {...props}>
+    <div className={cn("px-6 py-5", className)} {...props}>
       {children}
     </div>
   );
@@ -50,7 +53,7 @@ export function CardContent({ className, children, ...props }: CardProps) {
 export function CardFooter({ className, children, ...props }: CardProps) {
   return (
     <div
-      className={cn("px-6 py-4 border-t border-gray-200", className)}
+      className={cn("px-6 py-4 bg-slate-50 border-t border-slate-100", className)}
       {...props}
     >
       {children}

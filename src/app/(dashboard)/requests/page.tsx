@@ -3,9 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
-import { getStatusColor } from "@/lib/utils";
 import type { AnalysisRequest } from "@/types";
 
 interface RequestsResponse {
@@ -54,137 +51,135 @@ export default function RequestsPage() {
   ];
 
   const formatDate = (date: Date | string) => {
-    return new Date(date).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US");
+    const localeMap: Record<string, string> = { ko: "ko-KR", th: "th-TH", en: "en-US" };
+    return new Date(date).toLocaleDateString(localeMap[locale] || "en-US");
+  };
+
+  const getStatusBadgeClass = (status: string) => {
+    switch (status) {
+      case "completed": return "badge badge-completed";
+      case "in_progress": return "badge badge-in-progress";
+      case "pending": return "badge badge-pending";
+      default: return "badge badge-cancelled";
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">{t("requests.title")}</h1>
-        <Link href="/requests/new">
-          <Button>{t("requests.newRequest")}</Button>
+        <h1 className="text-3xl font-[900] tracking-tight text-primary">{t("requests.title")}</h1>
+        <Link
+          href="/requests/new"
+          className="btn-accent text-sm"
+        >
+          {t("requests.newRequest")}
         </Link>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>{t("nav.requests")}</CardTitle>
-            <div className="flex gap-2">
-              {statuses.map((status) => (
-                <button
-                  key={status.value}
-                  onClick={() => {
-                    setStatusFilter(status.value);
-                    setPage(1);
-                  }}
-                  className={`px-3 py-1 text-sm rounded-full transition-colors ${
-                    statusFilter === status.value
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
-                  {t(status.labelKey)}
-                </button>
-              ))}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="text-center py-8 text-gray-500">{t("common.loading")}</div>
-          ) : !data?.requests.length ? (
-            <div className="text-center py-8 text-gray-500">
-              {t("requests.noRequests")}
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        {t("requests.requestTitle")}
-                      </th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        {t("requests.requester")}
-                      </th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        {t("requests.files")}
-                      </th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        {t("requests.status")}
-                      </th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-500">
-                        {t("requests.requestDate")}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.requests.map((request) => (
-                      <tr
-                        key={request.id}
-                        className="border-b hover:bg-gray-50"
-                      >
-                        <td className="py-3 px-4">
-                          <Link
-                            href={`/requests/${request.id}`}
-                            className="text-blue-600 hover:underline font-medium"
-                          >
-                            {request.title}
-                          </Link>
-                        </td>
-                        <td className="py-3 px-4 text-gray-600">
-                          {request.user?.name || "-"}
-                        </td>
-                        <td className="py-3 px-4 text-gray-600">
-                          {request.files?.length || 0}
-                        </td>
-                        <td className="py-3 px-4">
-                          <span
-                            className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
-                              request.status
-                            )}`}
-                          >
-                            {t(`status.${request.status}`)}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-gray-600">
-                          {formatDate(request.createdAt)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+      {/* Filters */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {statuses.map((status) => (
+          <button
+            key={status.value}
+            onClick={() => {
+              setStatusFilter(status.value);
+              setPage(1);
+            }}
+            className={`px-4 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg transition-all duration-200 ${
+              statusFilter === status.value
+                ? "bg-primary text-white shadow-md"
+                : "bg-white text-slate-500 border border-slate-200 hover:border-primary hover:text-primary"
+            }`}
+          >
+            {t(status.labelKey)}
+          </button>
+        ))}
+      </div>
 
-              {data.pagination.totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-6">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={page === 1}
-                    onClick={() => setPage(page - 1)}
-                  >
-                    {t("common.back")}
-                  </Button>
-                  <span className="text-sm text-gray-600">
-                    {page} / {data.pagination.totalPages}
-                  </span>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={page === data.pagination.totalPages}
-                    onClick={() => setPage(page + 1)}
-                  >
-                    {t("dashboard.viewAll")}
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+      {/* Table */}
+      <div className="card">
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <div className="animate-spin h-8 w-8 border-4 border-accent border-t-transparent rounded-full" />
+          </div>
+        ) : !data?.requests.length ? (
+          <div className="text-center py-16">
+            <p className="text-slate-400 text-sm italic uppercase tracking-wider">{t("requests.noRequests")}</p>
+            <Link href="/requests/new" className="inline-block mt-4 text-accent hover:text-accent-dark font-bold text-sm uppercase tracking-wider">
+              {t("requests.createFirst")}
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="table-header">
+                    <th className="text-left py-4 px-6">{t("requests.requestTitle")}</th>
+                    <th className="text-left py-4 px-6">{t("requests.requester")}</th>
+                    <th className="text-left py-4 px-6">{t("requests.files")}</th>
+                    <th className="text-left py-4 px-6">{t("requests.status")}</th>
+                    <th className="text-left py-4 px-6">{t("requests.requestDate")}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {data.requests.map((request) => (
+                    <tr key={request.id} className="table-row">
+                      <td className="py-4 px-6">
+                        <Link
+                          href={`/requests/${request.id}`}
+                          className="font-bold text-slate-800 hover:text-primary transition-colors"
+                        >
+                          {request.title}
+                        </Link>
+                      </td>
+                      <td className="py-4 px-6 text-sm text-slate-600">
+                        {request.user?.name || "-"}
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-accent/10 text-accent text-xs font-bold">
+                          {request.files?.length || 0}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className={getStatusBadgeClass(request.status)}>
+                          {t(`status.${request.status}`)}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-sm text-slate-500">
+                        {formatDate(request.createdAt)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {data.pagination.totalPages > 1 && (
+              <div className="flex items-center justify-center gap-4 py-6 border-t border-slate-100">
+                <button
+                  disabled={page === 1}
+                  onClick={() => setPage(page - 1)}
+                  className="px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  {t("common.back")}
+                </button>
+                <span className="text-sm font-bold text-slate-600">
+                  {page} / {data.pagination.totalPages}
+                </span>
+                <button
+                  disabled={page === data.pagination.totalPages}
+                  onClick={() => setPage(page + 1)}
+                  className="px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

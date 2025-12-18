@@ -1,27 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #F8FAFC;
+  --foreground: #333333;
+  --primary: #0A2F6B;
+  --accent: #00C4CC;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  /* Custom font weight utilities */
+  .font-black {
+    font-weight: 900;
+  }
+}
+
+@layer components {
+  /* Primary button style */
+  .btn-primary {
+    @apply bg-primary text-white font-black uppercase tracking-widest;
+    @apply px-6 py-3 rounded-lg;
+    @apply hover:bg-primary-dark active:scale-[0.99];
+    @apply transition-all duration-300;
+    @apply shadow-lg shadow-primary/20;
+  }
+
+  /* Accent button style */
+  .btn-accent {
+    @apply bg-accent text-white font-black uppercase tracking-widest;
+    @apply px-6 py-3 rounded-lg;
+    @apply hover:bg-accent-dark active:scale-[0.99];
+    @apply transition-all duration-300;
+    @apply shadow-lg shadow-accent/20;
+  }
+
+  /* Secondary button style */
+  .btn-secondary {
+    @apply bg-white text-slate-600 font-bold uppercase tracking-wider;
+    @apply px-6 py-3 rounded-lg border border-slate-200;
+    @apply hover:bg-slate-50 active:scale-[0.99];
+    @apply transition-all duration-300;
+  }
+
+  /* Input field style */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg;
+    @apply bg-slate-50 border border-slate-200;
+    @apply text-slate-800 font-semibold;
+    @apply placeholder:text-slate-400;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white focus:border-transparent;
+    @apply transition-all duration-200;
+  }
+
+  /* Label style */
+  .label-text {
+    @apply text-xs font-black uppercase tracking-widest text-slate-500 mb-1.5 ml-1;
+  }
+
+  /* Card with header */
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden;
+  }
+
+  .card-header {
+    @apply bg-primary px-6 py-4;
+  }
+
+  .card-header-title {
+    @apply text-white font-black text-sm uppercase tracking-widest;
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  /* Table styles */
+  .table-header {
+    @apply bg-primary text-white/80 text-[10px] font-black uppercase tracking-[0.15em];
+  }
+
+  .table-row {
+    @apply hover:bg-slate-50 transition-colors duration-200;
+  }
+
+  /* Status badges */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold;
+  }
+
+  .badge-pending {
+    @apply bg-blue-50 text-blue-700;
+  }
+
+  .badge-in-progress {
+    @apply bg-purple-50 text-purple-700;
+  }
+
+  .badge-completed {
+    @apply bg-green-50 text-green-700;
+  }
+
+  .badge-cancelled {
+    @apply bg-red-50 text-red-700;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

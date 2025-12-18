@@ -5,8 +5,8 @@ import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "분석 요청 관리 시스템",
-  description: "Remobody 분석 요청 관리 시스템",
+  title: "REMO Data Bridge",
+  description: "Cross-border data analysis platform",
 };
 
 export default async function RootLayout({
@@ -19,7 +19,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className="antialiased">
+      <body className="antialiased bg-slate-50 min-h-screen">
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { ButtonHTMLAttributes, forwardRef } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "danger" | "ghost";
+  variant?: "primary" | "secondary" | "accent" | "danger" | "ghost";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
 }
@@ -23,27 +23,32 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const variants = {
-      primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
+      primary:
+        "bg-primary text-white hover:bg-primary-dark focus:ring-primary/50 shadow-lg shadow-primary/20",
       secondary:
-        "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500",
-      danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
-      ghost: "bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-500",
+        "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 focus:ring-slate-200",
+      accent:
+        "bg-accent text-white hover:bg-accent-dark focus:ring-accent/50 shadow-lg shadow-accent/20",
+      danger:
+        "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500/50 shadow-lg shadow-red-500/20",
+      ghost:
+        "bg-transparent text-slate-600 hover:bg-slate-100 focus:ring-slate-200",
     };
 
     const sizes = {
-      sm: "px-3 py-1.5 text-sm",
-      md: "px-4 py-2 text-sm",
-      lg: "px-6 py-3 text-base",
+      sm: "px-3 py-1.5 text-xs",
+      md: "px-4 py-2.5 text-sm",
+      lg: "px-6 py-3 text-sm",
     };
 
     return (
       <button
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center font-medium rounded-lg",
+          "inline-flex items-center justify-center font-black uppercase tracking-wider rounded-lg",
           "focus:outline-none focus:ring-2 focus:ring-offset-2",
-          "disabled:opacity-50 disabled:cursor-not-allowed",
-          "transition-colors duration-200",
+          "disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none",
+          "transition-all duration-200 active:scale-[0.99]",
           variants[variant],
           sizes[size],
           className

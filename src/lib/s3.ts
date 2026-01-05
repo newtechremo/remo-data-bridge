@@ -35,10 +35,13 @@ export function getS3Url(key: string): string {
   return `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
 }
 
-export async function getPresignedDownloadUrl(key: string): Promise<string> {
+export async function getPresignedDownloadUrl(key: string, filename?: string): Promise<string> {
   const command = new GetObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET!,
     Key: key,
+    ResponseContentDisposition: filename
+      ? `attachment; filename="${encodeURIComponent(filename)}"`
+      : "attachment",
   });
 
   return getSignedUrl(s3Client, command, { expiresIn: 3600 });

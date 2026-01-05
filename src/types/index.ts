@@ -29,6 +29,7 @@ export interface AnalysisRequest {
   id: string;
   userId: string;
   title: string;
+  memo: string | null;
   status: RequestStatus;
   resultText: string | null;
   resultFileUrl: string | null;

@@ -34,7 +34,20 @@
       "Bash(node:*)",
       "Bash(cmd //c \"taskkill /PID 263876 /F\")",
       "Bash(cmd //c \"taskkill /IM node.exe /F\")",
-      "Bash(timeout /t 2)"
+      "Bash(timeout /t 2)",
+      "Bash(npx prisma studio:*)",
+      "Bash(timeout /t)",
+      "Bash(git stash:*)",
+      "Bash(aws s3api get-public-access-block:*)",
+      "Bash(aws s3api get-bucket-versioning:*)",
+      "Bash(aws s3api put-bucket-versioning:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(npm run docs:screenshot:*)",
+      "Bash(npm run docs:pdf:*)",
+      "Bash(ls:*)",
+      "Bash(git push:*)",
+      "Bash(gh auth:*)",
+      "Bash(git remote add:*)"
     ]
   }
 }

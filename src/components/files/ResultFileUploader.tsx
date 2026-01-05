@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 
 import { useState, useRef } from "react";
 import Button from "@/components/ui/Button";
-import { formatFileSize } from "@/lib/utils";
 
 interface ResultFileUploaderProps {
   onFileUploaded: (url: string) => void;
@@ -86,10 +85,18 @@ export default function ResultFileUploader({
     if (!uploadedUrl) return;
 
     try {
+      // Use stored filename or extract from URL
+      let downloadFilename = fileName;
+      if (!downloadFilename) {
+        const urlParts = uploadedUrl.split("/");
+        const rawFilename = urlParts[urlParts.length - 1];
+        downloadFilename = decodeURIComponent(rawFilename.replace(/^\d+-/, ""));
+      }
+
       const res = await fetch("/api/download", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ s3Url: uploadedUrl }),
+        body: JSON.stringify({ s3Url: uploadedUrl, filename: downloadFilename }),
       });
 
       if (!res.ok) throw new Error("Failed to get download URL");
@@ -122,10 +129,10 @@ export default function ResultFileUploader({
               size="sm"
               onClick={handleView}
             >
-              보기
+              {t("common.view")}
             </Button>
             <Button variant="ghost" size="sm" onClick={handleRemove}>
-              삭제
+              {t("common.delete")}
             </Button>
           </div>
         </div>

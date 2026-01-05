@@ -12,6 +12,7 @@ export default function NewRequestPage() {
   const router = useRouter();
   const t = useTranslations();
   const [title, setTitle] = useState("");
+  const [memo, setMemo] = useState("");
   const [files, setFiles] = useState<FileUploadInfo[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
@@ -62,7 +63,7 @@ export default function NewRequestPage() {
       const res = await fetch("/api/requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, files }),
+        body: JSON.stringify({ title, memo, files }),
       });
 
       if (!res.ok) {
@@ -106,27 +107,6 @@ export default function NewRequestPage() {
       <div className={`max-w-2xl mx-auto space-y-6 animate-fade-in ${!hasConsented && !showConsent ? "opacity-50 pointer-events-none" : ""}`}>
         <h1 className="text-3xl font-[900] tracking-tight text-primary">{t("requests.new.title")}</h1>
 
-        {/* Security Notice */}
-        <div className="bg-primary rounded-xl p-5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="relative flex items-start gap-4">
-            <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg className="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-            </div>
-            <div>
-              <h3 className="text-[11px] font-black uppercase tracking-widest text-white flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                Security Directive
-              </h3>
-              <p className="text-sm text-slate-300 mt-1">
-                AES-256 military-grade encryption active. Your data is protected during transfer and storage.
-              </p>
-            </div>
-          </div>
-        </div>
-
         <form onSubmit={handleSubmit}>
           <div className="card">
             <div className="card-header">
@@ -143,6 +123,18 @@ export default function NewRequestPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
+                />
+              </div>
+
+              {/* Memo Input */}
+              <div>
+                <label className="label-text block">{t("requests.new.memoLabel")}</label>
+                <textarea
+                  className="input-field min-h-[100px] resize-y"
+                  placeholder={t("requests.new.memoPlaceholder")}
+                  value={memo}
+                  onChange={(e) => setMemo(e.target.value)}
+                  maxLength={1000}
                 />
               </div>
 
@@ -191,6 +183,27 @@ export default function NewRequestPage() {
                   </div>
                 </div>
               )}
+
+              {/* Security Notice */}
+              <div className="bg-primary rounded-xl p-5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="relative flex items-start gap-4">
+                  <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-[11px] font-black uppercase tracking-widest text-white flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                      Security Directive
+                    </h3>
+                    <p className="text-sm text-slate-300 mt-1">
+                      AES-256 military-grade encryption active. Your data is protected during transfer and storage.
+                    </p>
+                  </div>
+                </div>
+              </div>
 
               {/* Buttons */}
               <div className="flex gap-3 pt-4">

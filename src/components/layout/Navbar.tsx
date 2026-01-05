@@ -120,7 +120,10 @@ export default function Navbar({ user, isAdmin }: NavbarProps) {
             
             {/* Logout Button */}
             <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
+              onClick={async () => {
+                await signOut({ redirect: false });
+                window.location.href = `${window.location.origin}/login`;
+              }}
               className="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all duration-200"
               title={t("auth.logout")}
             >

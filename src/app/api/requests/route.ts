@@ -5,6 +5,7 @@ import { z } from "zod";
 
 const createRequestSchema = z.object({
   title: z.string().min(1, "제목을 입력해주세요").max(200),
+  memo: z.string().max(1000).optional(),
   files: z.array(
     z.object({
       originalFilename: z.string(),
@@ -95,11 +96,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const { title, files } = parsed.data;
+    const { title, memo, files } = parsed.data;
 
     const analysisRequest = await prisma.analysisRequest.create({
       data: {
         title,
+        memo,
         userId: session.user.id,
         files: {
           create: files.map((file) => ({

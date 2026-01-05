@@ -100,44 +100,62 @@ export default async function DashboardPage() {
             {t("dashboard.viewAll")}
           </Link>
         </div>
-        <div className="card-body p-0">
-          {recentRequests.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-slate-400 text-sm italic uppercase tracking-wider">{t("requests.noRequests")}</p>
-              <Link href="/requests/new" className="inline-block mt-4 text-accent hover:text-accent-dark font-bold text-sm uppercase tracking-wider">
-                {t("nav.newRequest")}
-              </Link>
-            </div>
-          ) : (
-            <div className="divide-y divide-slate-100">
-              {recentRequests.map((request) => (
-                <Link
-                  key={request.id}
-                  href={`/requests/${request.id}`}
-                  className="table-row flex items-center justify-between px-6 py-4"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-800">{request.title}</p>
-                      <p className="text-xs text-slate-400 mt-0.5">
-                        {isAdmin && request.user?.name && `${request.user.name} · `}
-                        {request._count.files} {t("requests.files")} · {new Date(request.createdAt).toLocaleDateString(locale === "ko" ? "ko-KR" : locale === "th" ? "th-TH" : "en-US")}
-                      </p>
-                    </div>
-                  </div>
-                  <span className={getStatusBadgeClass(request.status)}>
-                    {t(`status.${request.status}`)}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
+        {recentRequests.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-slate-400 text-sm italic uppercase tracking-wider">{t("requests.noRequests")}</p>
+            <Link href="/requests/new" className="inline-block mt-4 text-accent hover:text-accent-dark font-bold text-sm uppercase tracking-wider">
+              {t("nav.newRequest")}
+            </Link>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="table-header">
+                  <th className="text-left py-4 px-6">{t("requests.requestTitle")}</th>
+                  <th className="text-left py-4 px-6">{t("requests.memo")}</th>
+                  <th className="text-left py-4 px-6">{t("requests.requester")}</th>
+                  <th className="text-left py-4 px-6">{t("requests.files")}</th>
+                  <th className="text-left py-4 px-6">{t("requests.status")}</th>
+                  <th className="text-left py-4 px-6">{t("requests.requestDate")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {recentRequests.map((request) => (
+                  <tr key={request.id} className="table-row">
+                    <td className="py-4 px-6">
+                      <Link
+                        href={`/requests/${request.id}`}
+                        className="font-bold text-slate-800 hover:text-primary transition-colors"
+                      >
+                        {request.title}
+                      </Link>
+                    </td>
+                    <td className="py-4 px-6 text-sm text-slate-500 max-w-[200px] truncate">
+                      {request.memo || "-"}
+                    </td>
+                    <td className="py-4 px-6 text-sm text-slate-600">
+                      {request.user?.name || "-"}
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-accent/10 text-accent text-xs font-bold">
+                        {request._count.files}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className={getStatusBadgeClass(request.status)}>
+                        {t(`status.${request.status}`)}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6 text-sm text-slate-500">
+                      {new Date(request.createdAt).toLocaleDateString(locale === "ko" ? "ko-KR" : locale === "th" ? "th-TH" : "en-US", { calendar: "gregory" })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

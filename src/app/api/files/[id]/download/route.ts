@@ -39,7 +39,7 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const downloadUrl = await getPresignedDownloadUrl(file.s3Key);
+    const downloadUrl = await getPresignedDownloadUrl(file.s3Key, file.originalFilename);
 
     return NextResponse.json({ downloadUrl });
   } catch (error) {

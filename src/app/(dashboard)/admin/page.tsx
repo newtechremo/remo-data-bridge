@@ -91,7 +91,7 @@ export default async function AdminPage() {
                     <p className="font-medium text-gray-900">{request.title}</p>
                     <p className="text-sm text-gray-500">
                       {request.user?.name} · {t("requests.files")} {request._count.files} ·{" "}
-                      {new Date(request.createdAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US")}
+                      {new Date(request.createdAt).toLocaleDateString(locale === "ko" ? "ko-KR" : locale === "th" ? "th-TH" : "en-US", { calendar: "gregory" })}
                     </p>
                   </Link>
                 ))}

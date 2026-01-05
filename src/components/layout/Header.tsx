@@ -31,7 +31,10 @@ export default function Header({ user }: HeaderProps) {
           <LanguageSelector />
           <Button
             variant="ghost"
-            onClick={() => signOut({ callbackUrl: "/login" })}
+            onClick={async () => {
+              await signOut({ redirect: false });
+              window.location.href = `${window.location.origin}/login`;
+            }}
           >
             {t("auth.logout")}
           </Button>

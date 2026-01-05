@@ -31,7 +31,8 @@ export default function RequestDetailPage() {
   const isAdmin = session?.user?.role === "admin";
 
   const formatDate = (date: Date | string) => {
-    return new Date(date).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US");
+    const localeMap: Record<string, string> = { ko: "ko-KR", th: "th-TH", en: "en-US" };
+    return new Date(date).toLocaleDateString(localeMap[locale] || "en-US", { calendar: "gregory" });
   };
 
   useEffect(() => {
@@ -41,10 +42,15 @@ export default function RequestDetailPage() {
   // Get presigned download URL and open in new tab
   const handleDownload = async (s3Url: string) => {
     try {
+      // Extract filename from S3 URL
+      const urlParts = s3Url.split("/");
+      const rawFilename = urlParts[urlParts.length - 1];
+      const filename = decodeURIComponent(rawFilename.replace(/^\d+-/, "")); // Remove timestamp prefix
+
       const res = await fetch("/api/download", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ s3Url }),
+        body: JSON.stringify({ s3Url, filename }),
       });
 
       if (!res.ok) throw new Error("Failed to get download URL");
@@ -216,6 +222,12 @@ export default function RequestDetailPage() {
               <p className="mt-1">{request.files?.length || 0}</p>
             </div>
           </div>
+          {request.memo && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="text-sm text-gray-500">{t("requests.memo")}</p>
+              <p className="mt-1 whitespace-pre-wrap text-gray-700">{request.memo}</p>
+            </div>
+          )}
         </CardContent>
       </Card>
 

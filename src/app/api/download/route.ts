@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { s3Url, s3Key } = body;
+    const { s3Url, s3Key, filename } = body;
 
     if (!s3Url && !s3Key) {
       return NextResponse.json(
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       }
     }
 
-    const downloadUrl = await getPresignedDownloadUrl(key);
+    const downloadUrl = await getPresignedDownloadUrl(key, filename);
 
     return NextResponse.json({ downloadUrl });
   } catch (error) {

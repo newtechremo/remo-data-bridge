@@ -52,7 +52,7 @@ export default function RequestsPage() {
 
   const formatDate = (date: Date | string) => {
     const localeMap: Record<string, string> = { ko: "ko-KR", th: "th-TH", en: "en-US" };
-    return new Date(date).toLocaleDateString(localeMap[locale] || "en-US");
+    return new Date(date).toLocaleDateString(localeMap[locale] || "en-US", { calendar: "gregory" });
   };
 
   const getStatusBadgeClass = (status: string) => {
@@ -117,6 +117,7 @@ export default function RequestsPage() {
                 <thead>
                   <tr className="table-header">
                     <th className="text-left py-4 px-6">{t("requests.requestTitle")}</th>
+                    <th className="text-left py-4 px-6">{t("requests.memo")}</th>
                     <th className="text-left py-4 px-6">{t("requests.requester")}</th>
                     <th className="text-left py-4 px-6">{t("requests.files")}</th>
                     <th className="text-left py-4 px-6">{t("requests.status")}</th>
@@ -133,6 +134,9 @@ export default function RequestsPage() {
                         >
                           {request.title}
                         </Link>
+                      </td>
+                      <td className="py-4 px-6 text-sm text-slate-500 max-w-[200px] truncate">
+                        {request.memo || "-"}
                       </td>
                       <td className="py-4 px-6 text-sm text-slate-600">
                         {request.user?.name || "-"}
@@ -173,7 +177,7 @@ export default function RequestsPage() {
                   onClick={() => setPage(page + 1)}
                   className="px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
-                  Next
+                  {t("common.next")}
                 </button>
               </div>
             )}

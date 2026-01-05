@@ -117,6 +117,8 @@ export default function FileUploader({
 
       if (uploadedInfos.length > 0) {
         onFilesUploaded(uploadedInfos);
+        // Clear completed files from the upload list (parent will show them)
+        setUploadingFiles((prev) => prev.filter((f) => f.status !== "done"));
       }
     },
     [onFilesUploaded, uploadingFiles.length]
@@ -190,7 +192,7 @@ export default function FileUploader({
                   size="sm"
                   onClick={() => removeFile(index)}
                 >
-                  삭제
+                  {t("common.delete")}
                 </Button>
               </div>
             </div>

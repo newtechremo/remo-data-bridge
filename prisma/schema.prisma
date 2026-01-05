@@ -26,6 +26,7 @@ model AnalysisRequest {
   id              String    @id @default(cuid())
   userId          String    @map("user_id")
   title           String
+  memo            String?
   status          String    @default("pending") // "pending", "in_progress", "completed", "cancelled"
   resultText      String?   @map("result_text")
   resultFileUrl   String?   @map("result_file_url")

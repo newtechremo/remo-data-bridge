@@ -41,3 +41,8 @@ cookies*.txt
 
 # Admin scripts (contains sensitive info)
 update-admin.ts
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar

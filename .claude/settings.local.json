@@ -47,7 +47,26 @@
       "Bash(ls:*)",
       "Bash(git push:*)",
       "Bash(gh auth:*)",
-      "Bash(git remote add:*)"
+      "Bash(git remote add:*)",
+      "Bash(openssl rand:*)",
+      "Bash(ss:*)",
+      "Bash(sudo ufw status:*)",
+      "Bash(sudo iptables:*)",
+      "Bash(nslookup:*)",
+      "Bash(dig:*)",
+      "Bash(ip route:*)",
+      "Bash(traceroute:*)",
+      "Bash(tracepath:*)",
+      "Bash(arp:*)",
+      "Bash(mtr:*)",
+      "Bash(sudo nft list:*)",
+      "Bash(docker network:*)",
+      "Bash(ip addr:*)",
+      "Bash(sudo systemctl status:*)",
+      "Bash(sudo iptables-legacy:*)",
+      "Bash(timeout 2 nc:*)",
+      "Bash(sudo which:*)",
+      "Bash(sudo /usr/sbin/iptables:*)"
     ]
   }
 }

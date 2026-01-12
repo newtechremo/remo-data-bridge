@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { sendNewRequestNotification } from "@/lib/slack";
 
 const createRequestSchema = z.object({
   title: z.string().min(1, "제목을 입력해주세요").max(200),
@@ -127,6 +128,16 @@ export async function POST(request: Request) {
         files: true,
       },
     });
+
+    // Slack 알림 전송 (비동기, 실패해도 요청 생성에 영향 없음)
+    sendNewRequestNotification({
+      title,
+      userName: session.user.name || "Unknown",
+      userEmail: session.user.email || "",
+      fileCount: files.length,
+      requestId: analysisRequest.id,
+      memo,
+    }).catch((err) => console.error("Slack notification error:", err));
 
     return NextResponse.json(analysisRequest, { status: 201 });
   } catch (error) {

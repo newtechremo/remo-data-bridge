@@ -11,7 +11,15 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "docs:screenshot": "npx tsx scripts/capture-screenshots.ts",
-    "docs:pdf": "npx tsx scripts/generate-pdf.ts"
+    "docs:pdf": "npx tsx scripts/generate-pdf.ts",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:all": "npm run test:run && npm run test:e2e"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.700.0",
@@ -35,19 +43,24 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@playwright/test": "^1.57.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.9.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.15.0",
     "eslint-config-next": "^15.0.3",
+    "jsdom": "^27.4.0",
     "md-to-pdf": "^5.2.5",
     "playwright": "^1.57.0",
     "postcss": "^8.4.49",
     "prisma": "^5.22.0",
     "tailwindcss": "^3.4.15",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^4.0.16"
   }
 }

@@ -2,11 +2,32 @@ export type UserRole = "admin" | "user";
 
 export type RequestStatus = "pending" | "in_progress" | "completed" | "cancelled";
 
+export type Locale = "ko" | "en" | "th";
+
 export interface User {
   id: string;
   email: string;
   name: string;
   role: UserRole;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// 다국어 결과 타입
+export interface AnalysisRequestResult {
+  id: string;
+  requestId: string;
+  locale: Locale;
+  text: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface UploadedFileResult {
+  id: string;
+  fileId: string;
+  locale: Locale;
+  text: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,10 +40,11 @@ export interface UploadedFile {
   s3Url: string;
   fileSize: number;
   mimeType: string | null;
-  analysisResult: string | null;
+  analysisResult: string | null; // deprecated
   analysisResultFileUrl: string | null;
   createdAt: Date;
   updatedAt: Date;
+  results?: UploadedFileResult[];
 }
 
 export interface AnalysisRequest {
@@ -31,7 +53,7 @@ export interface AnalysisRequest {
   title: string;
   memo: string | null;
   status: RequestStatus;
-  resultText: string | null;
+  resultText: string | null; // deprecated
   resultFileUrl: string | null;
   resultCreatedAt: Date | null;
   createdAt: Date;
@@ -39,6 +61,14 @@ export interface AnalysisRequest {
   deletedAt: Date | null;
   user?: User;
   files?: UploadedFile[];
+  results?: AnalysisRequestResult[];
+}
+
+// 다국어 결과 입력용 타입
+export interface MultiLangResult {
+  ko?: string;
+  en?: string;
+  th?: string;
 }
 
 export interface FileUploadInfo {

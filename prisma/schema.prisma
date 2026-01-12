@@ -28,21 +28,38 @@ model AnalysisRequest {
   title           String
   memo            String?
   status          String    @default("pending") // "pending", "in_progress", "completed", "cancelled"
-  resultText      String?   @map("result_text")
+  resultText      String?   @map("result_text") // deprecated: use results relation
   resultFileUrl   String?   @map("result_file_url")
   resultCreatedAt DateTime? @map("result_created_at")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
   deletedAt       DateTime? @map("deleted_at")
 
-  user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  files UploadedFile[]
+  user    User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  files   UploadedFile[]
+  results AnalysisRequestResult[]
 
   @@index([userId])
   @@index([status])
   @@index([createdAt(sort: Desc)])
   @@index([deletedAt])
   @@map("analysis_requests")
+}
+
+// 분석 요청 결과 다국어 테이블
+model AnalysisRequestResult {
+  id        String   @id @default(cuid())
+  requestId String   @map("request_id")
+  locale    String   // "ko", "en", "th"
+  text      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  request AnalysisRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@unique([requestId, locale])
+  @@index([requestId])
+  @@map("analysis_request_results")
 }
 
 model UploadedFile {
@@ -53,13 +70,30 @@ model UploadedFile {
   s3Url                 String   @map("s3_url")
   fileSize              Int      @map("file_size")
   mimeType              String?  @map("mime_type")
-  analysisResult        String?  @map("analysis_result")
+  analysisResult        String?  @map("analysis_result") // deprecated: use results relation
   analysisResultFileUrl String?  @map("analysis_result_file_url")
   createdAt             DateTime @default(now()) @map("created_at")
   updatedAt             DateTime @updatedAt @map("updated_at")
 
-  request AnalysisRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  request AnalysisRequest      @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  results UploadedFileResult[]
 
   @@index([requestId])
   @@map("uploaded_files")
+}
+
+// 업로드 파일 결과 다국어 테이블
+model UploadedFileResult {
+  id        String   @id @default(cuid())
+  fileId    String   @map("file_id")
+  locale    String   // "ko", "en", "th"
+  text      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  file UploadedFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@unique([fileId, locale])
+  @@index([fileId])
+  @@map("uploaded_file_results")
 }

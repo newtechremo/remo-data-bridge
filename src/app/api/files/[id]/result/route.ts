@@ -4,11 +4,18 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
 const fileResultSchema = z.object({
-  analysisResult: z.string().optional(),
+  // 다국어 결과 텍스트
+  results: z.object({
+    ko: z.string().optional(),
+    en: z.string().optional(),
+    th: z.string().optional(),
+  }).optional(),
   analysisResultFileUrl: z.string().optional(),
+  // 하위 호환성
+  analysisResult: z.string().optional(),
 });
 
-// PATCH: Add/Update file analysis result
+// PATCH: Add/Update file analysis result (다국어 지원)
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -44,13 +51,63 @@ export async function PATCH(
       return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
 
-    const { analysisResult, analysisResultFileUrl } = parsed.data;
+    const { results, analysisResultFileUrl, analysisResult } = parsed.data;
 
-    const updatedFile = await prisma.uploadedFile.update({
+    // 다국어 결과 upsert
+    const locales = ["ko", "en", "th"] as const;
+    const resultUpserts = [];
+
+    if (results) {
+      for (const locale of locales) {
+        const text = results[locale];
+        if (text !== undefined && text.trim() !== "") {
+          resultUpserts.push(
+            prisma.uploadedFileResult.upsert({
+              where: {
+                fileId_locale: {
+                  fileId: id,
+                  locale,
+                },
+              },
+              update: { text },
+              create: {
+                fileId: id,
+                locale,
+                text,
+              },
+            })
+          );
+        } else if (text === "") {
+          // 빈 문자열이면 삭제
+          resultUpserts.push(
+            prisma.uploadedFileResult.deleteMany({
+              where: {
+                fileId: id,
+                locale,
+              },
+            })
+          );
+        }
+      }
+    }
+
+    // 트랜잭션으로 실행
+    await prisma.$transaction([
+      ...resultUpserts,
+      prisma.uploadedFile.update({
+        where: { id },
+        data: {
+          ...(analysisResult !== undefined && { analysisResult: analysisResult || null }),
+          ...(analysisResultFileUrl !== undefined && { analysisResultFileUrl: analysisResultFileUrl || null }),
+        },
+      }),
+    ]);
+
+    // 업데이트된 결과 조회
+    const updatedFile = await prisma.uploadedFile.findUnique({
       where: { id },
-      data: {
-        ...(analysisResult !== undefined && { analysisResult: analysisResult || null }),
-        ...(analysisResultFileUrl !== undefined && { analysisResultFileUrl: analysisResultFileUrl || null }),
+      include: {
+        results: true,
       },
     });
 

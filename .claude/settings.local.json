@@ -70,7 +70,10 @@
       "mcp__ssh__ssh_status",
       "mcp__ssh__ssh_connect",
       "mcp__ssh__ssh_exec",
-      "Bash(/tmp/bin/gh.exe:*)"
+      "Bash(/tmp/bin/gh.exe:*)",
+      "Bash(npx tsc:*)",
+      "mcp__ssh__ssh_list_servers",
+      "Bash(git reset:*)"
     ]
   }
 }

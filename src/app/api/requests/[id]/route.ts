@@ -23,7 +23,12 @@ export async function GET(
         user: {
           select: { id: true, name: true, email: true },
         },
-        files: true,
+        files: {
+          include: {
+            results: true,
+          },
+        },
+        results: true,
       },
     });
 

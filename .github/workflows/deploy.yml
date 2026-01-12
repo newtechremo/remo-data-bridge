@@ -19,30 +19,102 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script_stop: false
           script: |
+            set -e
+
             echo "========== 배포 시작 =========="
             cd /home/finefit-temp/Desktop/project/remo-data-bridge
 
+            # 현재 커밋 해시 저장 (롤백용)
+            PREVIOUS_COMMIT=$(git rev-parse HEAD)
+            echo "현재 버전: $PREVIOUS_COMMIT"
+
+            # 롤백 함수 정의
+            rollback() {
+              echo "========== 롤백 시작 =========="
+              echo "이전 버전으로 롤백: $PREVIOUS_COMMIT"
+
+              cd /home/finefit-temp/Desktop/project/remo-data-bridge
+              git reset --hard $PREVIOUS_COMMIT
+
+              # 이전 버전으로 의존성 재설치
+              npm install
+              npx prisma generate
+
+              # 서버 재시작 (이전 버전)
+              fuser -k 3015/tcp 2>/dev/null || true
+              sleep 2
+              nohup npm run dev > app.log 2>&1 &
+              disown
+
+              echo "========== 롤백 완료 =========="
+              sleep 3
+              ps aux | grep -E "next.*3015" | grep -v grep | head -3
+              exit 1
+            }
+
             # ===== 1. Git Pull =====
             echo "1. Git Pull"
-            git pull origin main
+            if ! git pull origin main; then
+              echo "Git Pull 실패"
+              rollback
+            fi
+
+            NEW_COMMIT=$(git rev-parse HEAD)
+            echo "새 버전: $NEW_COMMIT"
 
             # ===== 2. 의존성 설치 =====
             echo "2. 의존성 설치"
-            npm install
+            if ! npm install; then
+              echo "npm install 실패"
+              rollback
+            fi
 
             # ===== 3. Prisma 설정 =====
-            echo "3. Prisma DB Push"
-            npx prisma generate
-            npx prisma db push
+            echo "3. Prisma 설정"
+            if ! npx prisma generate; then
+              echo "Prisma generate 실패"
+              rollback
+            fi
 
-            # ===== 4. 서버 재시작 =====
-            echo "4. 서버 재시작"
+            if ! npx prisma db push; then
+              echo "Prisma db push 실패"
+              rollback
+            fi
+
+            # ===== 4. 빌드 테스트 (타입 체크) =====
+            echo "4. 빌드 테스트"
+            if ! npm run build; then
+              echo "빌드 실패"
+              rollback
+            fi
+
+            # ===== 5. 서버 재시작 =====
+            echo "5. 서버 재시작"
             fuser -k 3015/tcp 2>/dev/null || true
             sleep 2
             nohup npm run dev > app.log 2>&1 &
             disown
 
+            # ===== 6. 서버 헬스체크 =====
+            echo "6. 서버 헬스체크"
+            sleep 5
+
+            # 서버가 정상적으로 시작되었는지 확인
+            for i in 1 2 3 4 5; do
+              if curl -s -o /dev/null -w "%{http_code}" http://localhost:3015/login | grep -q "200"; then
+                echo "서버 정상 시작 확인"
+                break
+              fi
+              if [ $i -eq 5 ]; then
+                echo "서버 시작 실패 - 헬스체크 실패"
+                rollback
+              fi
+              echo "헬스체크 재시도 ($i/5)..."
+              sleep 3
+            done
+
             # ===== 완료 확인 =====
             echo "========== 배포 완료 =========="
-            sleep 3
-            ps aux | grep -E "next" | grep -v grep | head -5
+            echo "이전 버전: $PREVIOUS_COMMIT"
+            echo "현재 버전: $NEW_COMMIT"
+            ps aux | grep -E "next.*3015" | grep -v grep | head -3

@@ -53,10 +53,13 @@
     "memo": "메모",
     "status": "상태",
     "requestDate": "요청일",
+    "deletedDate": "삭제일",
     "requester": "요청자",
     "files": "파일",
     "noRequests": "분석 요청이 없습니다",
     "createFirst": "첫 번째 분석 요청을 만들어보세요",
+    "active": "활성",
+    "deleted": "삭제됨",
     "detail": {
       "title": "요청 상세",
       "info": "요청 정보",

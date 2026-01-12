@@ -36,6 +36,7 @@ export interface AnalysisRequest {
   resultCreatedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt: Date | null;
   user?: User;
   files?: UploadedFile[];
 }

@@ -97,7 +97,7 @@ export async function PATCH(
   }
 }
 
-// DELETE: Delete request
+// DELETE: Soft delete request
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -113,7 +113,6 @@ export async function DELETE(
 
     const existingRequest = await prisma.analysisRequest.findUnique({
       where: { id },
-      include: { files: true },
     });
 
     if (!existingRequest) {
@@ -128,18 +127,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Delete files from S3
-    for (const file of existingRequest.files) {
-      try {
-        await deleteS3Object(file.s3Key);
-      } catch (e) {
-        console.error("Failed to delete S3 object:", e);
-      }
-    }
-
-    // Delete request (cascades to files)
-    await prisma.analysisRequest.delete({
+    // Soft delete: set deletedAt timestamp
+    await prisma.analysisRequest.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
 
     return NextResponse.json({ success: true });

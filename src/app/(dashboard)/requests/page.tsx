@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
+import { useSession } from "next-auth/react";
 import type { AnalysisRequest } from "@/types";
 
 interface RequestsResponse {
@@ -18,20 +19,24 @@ interface RequestsResponse {
 export default function RequestsPage() {
   const t = useTranslations();
   const locale = useLocale();
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === "admin";
   const [data, setData] = useState<RequestsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("");
+  const [showDeleted, setShowDeleted] = useState(false);
 
   useEffect(() => {
     fetchRequests();
-  }, [page, statusFilter]);
+  }, [page, statusFilter, showDeleted]);
 
   const fetchRequests = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({ page: String(page), limit: "10" });
       if (statusFilter) params.append("status", statusFilter);
+      if (showDeleted) params.append("deleted", "true");
 
       const res = await fetch(`/api/requests?${params}`);
       const json = await res.json();
@@ -79,7 +84,41 @@ export default function RequestsPage() {
 
       {/* Filters */}
       <div className="flex items-center gap-2 flex-wrap">
-        {statuses.map((status) => (
+        {/* Active/Deleted Toggle for Admin */}
+        {isAdmin && (
+          <div className="flex items-center gap-1 mr-4 border-r border-slate-200 pr-4">
+            <button
+              onClick={() => {
+                setShowDeleted(false);
+                setPage(1);
+              }}
+              className={`px-4 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg transition-all duration-200 ${
+                !showDeleted
+                  ? "bg-primary text-white shadow-md"
+                  : "bg-white text-slate-500 border border-slate-200 hover:border-primary hover:text-primary"
+              }`}
+            >
+              {t("requests.active")}
+            </button>
+            <button
+              onClick={() => {
+                setShowDeleted(true);
+                setStatusFilter("");
+                setPage(1);
+              }}
+              className={`px-4 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg transition-all duration-200 ${
+                showDeleted
+                  ? "bg-red-500 text-white shadow-md"
+                  : "bg-white text-slate-500 border border-slate-200 hover:border-red-500 hover:text-red-500"
+              }`}
+            >
+              {t("requests.deleted")}
+            </button>
+          </div>
+        )}
+
+        {/* Status Filters */}
+        {!showDeleted && statuses.map((status) => (
           <button
             key={status.value}
             onClick={() => {
@@ -121,12 +160,12 @@ export default function RequestsPage() {
                     <th className="text-left py-4 px-6">{t("requests.requester")}</th>
                     <th className="text-left py-4 px-6">{t("requests.files")}</th>
                     <th className="text-left py-4 px-6">{t("requests.status")}</th>
-                    <th className="text-left py-4 px-6">{t("requests.requestDate")}</th>
+                    <th className="text-left py-4 px-6">{showDeleted ? t("requests.deletedDate") : t("requests.requestDate")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {data.requests.map((request) => (
-                    <tr key={request.id} className="table-row">
+                    <tr key={request.id} className={`table-row ${showDeleted ? "opacity-60" : ""}`}>
                       <td className="py-4 px-6">
                         <Link
                           href={`/requests/${request.id}`}
@@ -152,7 +191,9 @@ export default function RequestsPage() {
                         </span>
                       </td>
                       <td className="py-4 px-6 text-sm text-slate-500">
-                        {formatDate(request.createdAt)}
+                        {showDeleted && request.deletedAt
+                          ? formatDate(request.deletedAt)
+                          : formatDate(request.createdAt)}
                       </td>
                     </tr>
                   ))}

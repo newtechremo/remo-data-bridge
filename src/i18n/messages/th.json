@@ -53,10 +53,13 @@
     "memo": "บันทึก",
     "status": "สถานะ",
     "requestDate": "วันที่ขอ",
+    "deletedDate": "วันที่ลบ",
     "requester": "ผู้ขอ",
     "files": "ไฟล์",
     "noRequests": "ไม่มีคำขอวิเคราะห์",
     "createFirst": "สร้างคำขอวิเคราะห์แรกของคุณ",
+    "active": "ใช้งาน",
+    "deleted": "ถูกลบ",
     "detail": {
       "title": "รายละเอียดคำขอ",
       "info": "ข้อมูลคำขอ",

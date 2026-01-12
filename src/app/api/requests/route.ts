@@ -31,12 +31,22 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
+    const deleted = searchParams.get("deleted"); // "true" for deleted only, "all" for all
 
     const where: Record<string, unknown> = {};
 
     // Admin can see all requests, users can only see their own
     if (session.user.role !== "admin") {
       where.userId = session.user.id;
+      // Users cannot see deleted requests
+      where.deletedAt = null;
+    } else {
+      // Admin can filter by deleted status
+      if (deleted === "true") {
+        where.deletedAt = { not: null };
+      } else if (deleted !== "all") {
+        where.deletedAt = null;
+      }
     }
 
     if (status) {

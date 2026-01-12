@@ -53,10 +53,13 @@
     "memo": "Memo",
     "status": "Status",
     "requestDate": "Request Date",
+    "deletedDate": "Deleted Date",
     "requester": "Requester",
     "files": "Files",
     "noRequests": "No analysis requests",
     "createFirst": "Create your first analysis request",
+    "active": "Active",
+    "deleted": "Deleted",
     "detail": {
       "title": "Request Details",
       "info": "Request Information",

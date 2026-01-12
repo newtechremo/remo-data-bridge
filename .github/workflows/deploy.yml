@@ -1,0 +1,48 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script_stop: false
+          script: |
+            echo "========== 배포 시작 =========="
+            cd /home/finefit-temp/Desktop/project/remo-data-bridge
+
+            # ===== 1. Git Pull =====
+            echo "1. Git Pull"
+            git pull origin main
+
+            # ===== 2. 의존성 설치 =====
+            echo "2. 의존성 설치"
+            npm install
+
+            # ===== 3. Prisma 설정 =====
+            echo "3. Prisma DB Push"
+            npx prisma generate
+            npx prisma db push
+
+            # ===== 4. 서버 재시작 =====
+            echo "4. 서버 재시작"
+            fuser -k 3015/tcp 2>/dev/null || true
+            sleep 2
+            nohup npm run dev > app.log 2>&1 &
+            disown
+
+            # ===== 완료 확인 =====
+            echo "========== 배포 완료 =========="
+            sleep 3
+            ps aux | grep -E "next" | grep -v grep | head -5

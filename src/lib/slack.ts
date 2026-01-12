@@ -24,7 +24,7 @@ export async function sendNewRequestNotification(
     return;
   }
 
-  const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://remo-data-bridge.remo.re.kr";
   const requestUrl = `${baseUrl}/requests/${payload.requestId}`;
 
   const blocks = [
@@ -78,24 +78,23 @@ export async function sendNewRequestNotification(
   }
 
   // 링크 버튼 추가
-  if (baseUrl) {
-    blocks.push({
-      type: "actions",
-      // @ts-expect-error Slack Block Kit elements type
-      elements: [
-        {
-          type: "button",
-          text: {
-            type: "plain_text",
-            text: "요청 상세 보기",
-            emoji: true,
-          },
-          url: requestUrl,
-          action_id: "view_request",
+  blocks.push({
+    type: "actions",
+    // @ts-expect-error Slack Block Kit elements type
+    elements: [
+      {
+        type: "button",
+        text: {
+          type: "plain_text",
+          text: "요청 상세 보기",
+          emoji: true,
         },
-      ],
-    });
-  }
+        url: requestUrl,
+        action_id: "view_request",
+        style: "primary",
+      },
+    ],
+  });
 
   try {
     const response = await fetch(webhookUrl, {

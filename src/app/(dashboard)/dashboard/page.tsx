@@ -9,7 +9,9 @@ export default async function DashboardPage() {
   const t = await getTranslations();
   const locale = await getLocale();
 
-  const where = isAdmin ? {} : { userId: session?.user?.id };
+  const where = isAdmin
+    ? { deletedAt: null }
+    : { userId: session?.user?.id, deletedAt: null };
 
   const [totalRequests, pendingRequests, inProgressRequests, completedRequests, recentRequests] =
     await Promise.all([

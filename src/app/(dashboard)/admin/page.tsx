@@ -18,13 +18,13 @@ export default async function AdminPage() {
   const [totalUsers, totalRequests, pendingRequests, completedRequests] =
     await Promise.all([
       prisma.user.count(),
-      prisma.analysisRequest.count(),
-      prisma.analysisRequest.count({ where: { status: "pending" } }),
-      prisma.analysisRequest.count({ where: { status: "completed" } }),
+      prisma.analysisRequest.count({ where: { deletedAt: null } }),
+      prisma.analysisRequest.count({ where: { status: "pending", deletedAt: null } }),
+      prisma.analysisRequest.count({ where: { status: "completed", deletedAt: null } }),
     ]);
 
   const recentRequests = await prisma.analysisRequest.findMany({
-    where: { status: "pending" },
+    where: { status: "pending", deletedAt: null },
     include: {
       user: { select: { name: true, email: true } },
       _count: { select: { files: true } },

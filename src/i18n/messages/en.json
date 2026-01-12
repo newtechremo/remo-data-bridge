@@ -60,6 +60,9 @@
     "createFirst": "Create your first analysis request",
     "active": "Active",
     "deleted": "Deleted",
+    "actions": "Actions",
+    "restore": "Restore",
+    "confirmRestore": "Are you sure you want to restore this request?",
     "detail": {
       "title": "Request Details",
       "info": "Request Information",

@@ -69,6 +69,24 @@ export default function RequestsPage() {
     }
   };
 
+  const handleRestore = async (id: string) => {
+    if (!confirm(t("requests.confirmRestore"))) return;
+
+    try {
+      const res = await fetch(`/api/requests/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ restore: true }),
+      });
+
+      if (res.ok) {
+        fetchRequests();
+      }
+    } catch (error) {
+      console.error("Failed to restore request:", error);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
@@ -161,6 +179,7 @@ export default function RequestsPage() {
                     <th className="text-left py-4 px-6">{t("requests.files")}</th>
                     <th className="text-left py-4 px-6">{t("requests.status")}</th>
                     <th className="text-left py-4 px-6">{showDeleted ? t("requests.deletedDate") : t("requests.requestDate")}</th>
+                    {showDeleted && <th className="text-left py-4 px-6">{t("requests.actions")}</th>}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -195,6 +214,16 @@ export default function RequestsPage() {
                           ? formatDate(request.deletedAt)
                           : formatDate(request.createdAt)}
                       </td>
+                      {showDeleted && (
+                        <td className="py-4 px-6">
+                          <button
+                            onClick={() => handleRestore(request.id)}
+                            className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors"
+                          >
+                            {t("requests.restore")}
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

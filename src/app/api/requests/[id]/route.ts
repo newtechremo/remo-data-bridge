@@ -49,7 +49,7 @@ export async function GET(
   }
 }
 
-// PATCH: Update request status
+// PATCH: Update request status or restore deleted request
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -72,11 +72,22 @@ export async function PATCH(
       return NextResponse.json({ error: "Request not found" }, { status: 404 });
     }
 
-    // Only admin can update status
+    // Only admin can update status or restore
     if (session.user.role !== "admin") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
+    // Handle restore action
+    if (body.restore === true) {
+      const restoredRequest = await prisma.analysisRequest.update({
+        where: { id },
+        data: { deletedAt: null },
+        include: { files: true },
+      });
+      return NextResponse.json(restoredRequest);
+    }
+
+    // Handle status update
     const updatedRequest = await prisma.analysisRequest.update({
       where: { id },
       data: {

@@ -66,7 +66,11 @@
       "Bash(sudo iptables-legacy:*)",
       "Bash(timeout 2 nc:*)",
       "Bash(sudo which:*)",
-      "Bash(sudo /usr/sbin/iptables:*)"
+      "Bash(sudo /usr/sbin/iptables:*)",
+      "mcp__ssh__ssh_status",
+      "mcp__ssh__ssh_connect",
+      "mcp__ssh__ssh_exec",
+      "Bash(/tmp/bin/gh.exe:*)"
     ]
   }
 }

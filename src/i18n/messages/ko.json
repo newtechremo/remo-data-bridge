@@ -60,6 +60,9 @@
     "createFirst": "첫 번째 분석 요청을 만들어보세요",
     "active": "활성",
     "deleted": "삭제됨",
+    "actions": "작업",
+    "restore": "복원",
+    "confirmRestore": "이 요청을 복원하시겠습니까?",
     "detail": {
       "title": "요청 상세",
       "info": "요청 정보",

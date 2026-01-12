@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="none">
+  <!-- Background -->
+  <rect width="180" height="180" rx="40" fill="#3B82F6"/>
+
+  <!-- Data bridge / chart icon -->
+  <rect x="30" y="100" width="25" height="50" rx="4" fill="white"/>
+  <rect x="77.5" y="65" width="25" height="85" rx="4" fill="white"/>
+  <rect x="125" y="40" width="25" height="110" rx="4" fill="white"/>
+
+  <!-- Connection line -->
+  <path d="M42.5 90 L90 55 L137.5 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+
+  <!-- Data points -->
+  <circle cx="42.5" cy="90" r="10" fill="white"/>
+  <circle cx="90" cy="55" r="10" fill="white"/>
+  <circle cx="137.5" cy="30" r="10" fill="white"/>
+</svg>

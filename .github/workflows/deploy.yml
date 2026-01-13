@@ -20,6 +20,7 @@ jobs:
           script_stop: false
           script: |
             set -e
+            export PATH="/usr/bin:/usr/local/bin:$HOME/.npm-global/bin:$PATH"
 
             echo "========== 배포 시작 =========="
             cd /home/finefit-temp/Desktop/project/remo-data-bridge

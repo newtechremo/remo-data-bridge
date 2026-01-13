@@ -27,6 +27,7 @@ prisma/dev.db-journal
 Thumbs.db
 
 # Logs
+logs/
 *.log
 npm-debug.log*
 

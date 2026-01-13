@@ -40,15 +40,13 @@ jobs:
               npm install
               npx prisma generate
 
-              # 서버 재시작 (이전 버전)
-              fuser -k 3015/tcp 2>/dev/null || true
-              sleep 2
-              nohup npm run dev > app.log 2>&1 &
-              disown
+              # PM2로 서버 재시작 (이전 버전)
+              npm run build
+              pm2 restart remo-data-bridge || pm2 start ecosystem.config.js
 
               echo "========== 롤백 완료 =========="
               sleep 3
-              ps aux | grep -E "next.*3015" | grep -v grep | head -3
+              pm2 status
               exit 1
             }
 
@@ -81,19 +79,30 @@ jobs:
               rollback
             fi
 
-            # ===== 4. 빌드 테스트 (타입 체크) =====
-            echo "4. 빌드 테스트"
+            # ===== 4. 빌드 =====
+            echo "4. 프로덕션 빌드"
             if ! npm run build; then
               echo "빌드 실패"
               rollback
             fi
 
-            # ===== 5. 서버 재시작 =====
-            echo "5. 서버 재시작"
-            fuser -k 3015/tcp 2>/dev/null || true
-            sleep 2
-            nohup npm run dev > app.log 2>&1 &
-            disown
+            # ===== 5. PM2로 서버 재시작 =====
+            echo "5. PM2 서버 재시작"
+
+            # logs 디렉토리 생성
+            mkdir -p logs
+
+            # PM2 프로세스가 있으면 reload, 없으면 start
+            if pm2 describe remo-data-bridge > /dev/null 2>&1; then
+              echo "기존 PM2 프로세스 재시작"
+              pm2 reload remo-data-bridge --update-env
+            else
+              echo "새 PM2 프로세스 시작"
+              pm2 start ecosystem.config.js
+            fi
+
+            # PM2 프로세스 저장 (시스템 재시작 시 자동 복구)
+            pm2 save
 
             # ===== 6. 서버 헬스체크 =====
             echo "6. 서버 헬스체크"
@@ -117,4 +126,4 @@ jobs:
             echo "========== 배포 완료 =========="
             echo "이전 버전: $PREVIOUS_COMMIT"
             echo "현재 버전: $NEW_COMMIT"
-            ps aux | grep -E "next.*3015" | grep -v grep | head -3
+            pm2 status

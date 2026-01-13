@@ -73,7 +73,8 @@
       "Bash(/tmp/bin/gh.exe:*)",
       "Bash(npx tsc:*)",
       "mcp__ssh__ssh_list_servers",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(pm2 --version:*)"
     ]
   }
 }

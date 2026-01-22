@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import type { AnalysisRequest } from "@/types";
 
 interface RequestsResponse {
@@ -21,11 +22,33 @@ export default function RequestsPage() {
   const locale = useLocale();
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === "admin";
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // URL 파라미터에서 상태 읽기
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const statusFilter = searchParams.get("status") || "";
+  const showDeleted = searchParams.get("deleted") === "true";
+
   const [data, setData] = useState<RequestsResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [showDeleted, setShowDeleted] = useState(false);
+
+  // URL 파라미터 업데이트 함수
+  const updateParams = useCallback((updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === "" || (key === "page" && value === "1") || (key === "deleted" && value === "false")) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
+
+    const queryString = params.toString();
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+  }, [searchParams, pathname, router]);
 
   useEffect(() => {
     fetchRequests();
@@ -106,10 +129,7 @@ export default function RequestsPage() {
         {isAdmin && (
           <div className="flex items-center gap-1 mr-4 border-r border-slate-200 pr-4">
             <button
-              onClick={() => {
-                setShowDeleted(false);
-                setPage(1);
-              }}
+              onClick={() => updateParams({ deleted: "false", page: "1" })}
               className={`px-4 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg transition-all duration-200 ${
                 !showDeleted
                   ? "bg-primary text-white shadow-md"
@@ -119,11 +139,7 @@ export default function RequestsPage() {
               {t("requests.active")}
             </button>
             <button
-              onClick={() => {
-                setShowDeleted(true);
-                setStatusFilter("");
-                setPage(1);
-              }}
+              onClick={() => updateParams({ deleted: "true", status: null, page: "1" })}
               className={`px-4 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg transition-all duration-200 ${
                 showDeleted
                   ? "bg-red-500 text-white shadow-md"
@@ -139,10 +155,7 @@ export default function RequestsPage() {
         {!showDeleted && statuses.map((status) => (
           <button
             key={status.value}
-            onClick={() => {
-              setStatusFilter(status.value);
-              setPage(1);
-            }}
+            onClick={() => updateParams({ status: status.value || null, page: "1" })}
             className={`px-4 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg transition-all duration-200 ${
               statusFilter === status.value
                 ? "bg-primary text-white shadow-md"
@@ -234,7 +247,7 @@ export default function RequestsPage() {
               <div className="flex items-center justify-center gap-4 py-6 border-t border-slate-100">
                 <button
                   disabled={page === 1}
-                  onClick={() => setPage(page - 1)}
+                  onClick={() => updateParams({ page: String(page - 1) })}
                   className="px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   {t("common.back")}
@@ -244,7 +257,7 @@ export default function RequestsPage() {
                 </span>
                 <button
                   disabled={page === data.pagination.totalPages}
-                  onClick={() => setPage(page + 1)}
+                  onClick={() => updateParams({ page: String(page + 1) })}
                   className="px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   {t("common.next")}

@@ -73,7 +73,9 @@
       "noResult": "No analysis result yet",
       "resultDate": "Result Date",
       "backToList": "Back to List",
-      "confirmDelete": "Are you sure you want to delete?"
+      "confirmDelete": "Are you sure you want to delete?",
+      "prevRequest": "Previous Request",
+      "nextRequest": "Next Request"
     },
     "new": {
       "title": "New Analysis Request",

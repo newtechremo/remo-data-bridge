@@ -44,7 +44,35 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    return NextResponse.json(analysisRequest);
+    // 관리자인 경우 이전/다음 요청 ID 조회
+    let prevId: string | null = null;
+    let nextId: string | null = null;
+
+    if (session.user.role === "admin") {
+      // 이전 요청: 현재보다 최신 (createdAt이 더 큰) 중 가장 오래된 것
+      const prevRequest = await prisma.analysisRequest.findFirst({
+        where: {
+          deletedAt: null,
+          createdAt: { gt: analysisRequest.createdAt },
+        },
+        orderBy: { createdAt: "asc" },
+        select: { id: true },
+      });
+      prevId = prevRequest?.id || null;
+
+      // 다음 요청: 현재보다 오래된 (createdAt이 더 작은) 중 가장 최신 것
+      const nextRequest = await prisma.analysisRequest.findFirst({
+        where: {
+          deletedAt: null,
+          createdAt: { lt: analysisRequest.createdAt },
+        },
+        orderBy: { createdAt: "desc" },
+        select: { id: true },
+      });
+      nextId = nextRequest?.id || null;
+    }
+
+    return NextResponse.json({ ...analysisRequest, prevId, nextId });
   } catch (error) {
     console.error("Get request error:", error);
     return NextResponse.json(

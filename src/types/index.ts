@@ -62,6 +62,9 @@ export interface AnalysisRequest {
   user?: User;
   files?: UploadedFile[];
   results?: AnalysisRequestResult[];
+  // 관리자용 네비게이션
+  prevId?: string | null;
+  nextId?: string | null;
 }
 
 // 다국어 결과 입력용 타입

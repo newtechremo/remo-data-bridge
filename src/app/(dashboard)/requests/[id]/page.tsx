@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import ResultFileUploader from "@/components/files/ResultFileUploader";
+import RequestNavigation from "@/components/requests/RequestNavigation";
 import {
   formatFileSize,
   getStatusColor,
@@ -273,8 +274,14 @@ export default function RequestDetailPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+    <>
+      {/* 관리자용 이전/다음 요청 네비게이션 */}
+      {isAdmin && (
+        <RequestNavigation prevId={request.prevId} nextId={request.nextId} />
+      )}
+
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">{request.title}</h1>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => router.back()}>
@@ -516,6 +523,7 @@ export default function RequestDetailPage() {
           )}
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </>
   );
 }

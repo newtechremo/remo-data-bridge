@@ -54,6 +54,12 @@ export default function RequestsPage() {
     fetchRequests();
   }, [page, statusFilter, showDeleted]);
 
+  // 현재 목록 URL을 세션 스토리지에 저장 (상세에서 돌아올 때 사용)
+  useEffect(() => {
+    const currentUrl = window.location.href;
+    sessionStorage.setItem("requestListUrl", currentUrl);
+  }, [page, statusFilter, showDeleted]);
+
   const fetchRequests = async () => {
     setLoading(true);
     try {

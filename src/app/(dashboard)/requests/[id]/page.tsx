@@ -284,7 +284,10 @@ export default function RequestDetailPage() {
         <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">{request.title}</h1>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => router.back()}>
+          <Button variant="secondary" onClick={() => {
+            const listUrl = sessionStorage.getItem("requestListUrl") || "/requests";
+            router.push(listUrl);
+          }}>
             {t("requests.detail.backToList")}
           </Button>
           <Button variant="danger" onClick={handleDelete}>

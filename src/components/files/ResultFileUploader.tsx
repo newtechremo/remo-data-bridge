@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "@/components/ui/Button";
 
 interface ResultFileUploaderProps {
@@ -21,6 +21,16 @@ export default function ResultFileUploader({
   const [uploadedUrl, setUploadedUrl] = useState(currentUrl || "");
   const [fileName, setFileName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // currentUrl에서 파일명 추출하여 초기화
+  useEffect(() => {
+    if (currentUrl && !fileName) {
+      const urlParts = currentUrl.split("/");
+      const rawFilename = urlParts[urlParts.length - 1];
+      const extractedName = decodeURIComponent(rawFilename.replace(/^\d+-/, ""));
+      setFileName(extractedName);
+    }
+  }, [currentUrl, fileName]);
 
   const uploadFile = async (file: File): Promise<string> => {
     const presignedRes = await fetch("/api/upload/presigned", {

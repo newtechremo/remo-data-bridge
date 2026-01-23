@@ -154,7 +154,7 @@ export default function RequestNavigation({
           >
             <ChevronLeft className="w-4 h-4" />
             <span className="hidden sm:inline">{t("prevRequest")}</span>
-            <span className="sm:hidden">이전</span>
+            <span className="sm:hidden">{t("prev")}</span>
           </button>
         ) : (
           <div className="w-20" />
@@ -165,7 +165,7 @@ export default function RequestNavigation({
             onClick={handleContentClick}
             className="text-xs text-gray-400 hover:text-gray-600"
           >
-            탭하여 닫기
+            {t("tapToClose")}
           </button>
         </div>
 
@@ -176,7 +176,7 @@ export default function RequestNavigation({
               hover:bg-gray-100 rounded-full transition-colors"
           >
             <span className="hidden sm:inline">{t("nextRequest")}</span>
-            <span className="sm:hidden">다음</span>
+            <span className="sm:hidden">{t("next")}</span>
             <ChevronRight className="w-4 h-4" />
           </button>
         ) : (

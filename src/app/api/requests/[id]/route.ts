@@ -49,24 +49,24 @@ export async function GET(
     let nextId: string | null = null;
 
     if (session.user.role === "admin") {
-      // 이전 요청: 현재보다 최신 (createdAt이 더 큰) 중 가장 오래된 것
+      // 이전 요청: 현재보다 오래된 (createdAt이 더 작은) 중 가장 최신 것 (시간상 이전)
       const prevRequest = await prisma.analysisRequest.findFirst({
-        where: {
-          deletedAt: null,
-          createdAt: { gt: analysisRequest.createdAt },
-        },
-        orderBy: { createdAt: "asc" },
-        select: { id: true },
-      });
-      prevId = prevRequest?.id || null;
-
-      // 다음 요청: 현재보다 오래된 (createdAt이 더 작은) 중 가장 최신 것
-      const nextRequest = await prisma.analysisRequest.findFirst({
         where: {
           deletedAt: null,
           createdAt: { lt: analysisRequest.createdAt },
         },
         orderBy: { createdAt: "desc" },
+        select: { id: true },
+      });
+      prevId = prevRequest?.id || null;
+
+      // 다음 요청: 현재보다 최신 (createdAt이 더 큰) 중 가장 오래된 것 (시간상 다음)
+      const nextRequest = await prisma.analysisRequest.findFirst({
+        where: {
+          deletedAt: null,
+          createdAt: { gt: analysisRequest.createdAt },
+        },
+        orderBy: { createdAt: "asc" },
         select: { id: true },
       });
       nextId = nextRequest?.id || null;

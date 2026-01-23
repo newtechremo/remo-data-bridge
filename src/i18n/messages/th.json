@@ -75,7 +75,10 @@
       "backToList": "กลับไปรายการ",
       "confirmDelete": "คุณแน่ใจหรือไม่ที่จะลบ?",
       "prevRequest": "คำขอก่อนหน้า",
-      "nextRequest": "คำขอถัดไป"
+      "nextRequest": "คำขอถัดไป",
+      "prev": "ก่อนหน้า",
+      "next": "ถัดไป",
+      "tapToClose": "แตะเพื่อปิด"
     },
     "new": {
       "title": "คำขอวิเคราะห์ใหม่",

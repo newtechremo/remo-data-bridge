@@ -75,7 +75,10 @@
       "backToList": "목록으로",
       "confirmDelete": "정말 삭제하시겠습니까?",
       "prevRequest": "이전 요청",
-      "nextRequest": "다음 요청"
+      "nextRequest": "다음 요청",
+      "prev": "이전",
+      "next": "다음",
+      "tapToClose": "탭하여 닫기"
     },
     "new": {
       "title": "새 분석 요청",

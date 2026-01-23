@@ -75,7 +75,10 @@
       "backToList": "Back to List",
       "confirmDelete": "Are you sure you want to delete?",
       "prevRequest": "Previous Request",
-      "nextRequest": "Next Request"
+      "nextRequest": "Next Request",
+      "prev": "Prev",
+      "next": "Next",
+      "tapToClose": "Tap to close"
     },
     "new": {
       "title": "New Analysis Request",
